@@ -12,42 +12,33 @@ function main() {
 
         let myWindow = new Oui.Window("My Window");
         myWindow.setAbsoluteWidth(300);
-        myWindow.setHorizontalResize(true, 100, 600);
-        myWindow.setVerticalResize(true, 100, 400);
-
 
         {
-            let boxH = new Oui.HorizontalBox();
-            boxH.setRelativeHeight(100);
+            let groupBox = new Oui.GroupBox("Label");
+            myWindow.addChild(groupBox);
 
             {
-                let button = new Oui.Widgets.Button("Button A");
-                button.setAbsoluteWidth(100);
-                button.setRelativeHeight(100);
-                boxH.addChild(button);
+                let label = new Oui.Widgets.Label("Label");
+                groupBox.addChild(label);
+            }
+
+
+            {
+                let button = new Oui.Widgets.Button("Label", () => { console.log("On click") });
+                groupBox.addChild(button);
             }
 
             {
-                let boxV = new Oui.VerticalBox();
-                boxV.setRelativeHeight(100);
-                boxH.addChild(boxV);
-                boxH.setRemainingWidthFiller(boxV);
-
-                boxV.setPadding(0, 0, 0, 0);
-
-                {
-                    let button = new Oui.Widgets.Button("Button B");
-                    button.setRelativeHeight(50);
-                    boxV.addChild(button);
-                }
-
-                {
-                    let button = new Oui.Widgets.Button("Button C");
-                    button.setRelativeHeight(50);
-                    boxV.addChild(button);
-                }
+                let checkBox = new Oui.Widgets.Checkbox("Checkbox", () => { console.log("On change") });
+                groupBox.addChild(checkBox);
             }
-            myWindow.addChild(boxH);
+
+
+
+            {
+                let dropdown = new Oui.Widgets.Dropdown(["Option A", "Option B", "Option C"], (i) => { console.log("On change " + i) });
+                groupBox.addChild(dropdown);
+            }
         }
 
         myWindow.open();

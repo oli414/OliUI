@@ -22,7 +22,8 @@ class Window extends VerticalBox {
     }
 
     open() {
-        this._handle = ui.openWindow(this.getDescription());
+        let desc = this.getDescription();
+        this._handle = ui.openWindow(desc);
     }
 
     isOpen() {

@@ -118,6 +118,10 @@ class Element {
         if (this._parent != null) {
             this._parent.updateChildDimensions();
         }
+        this.requestSync();
+    }
+
+    requestSync() {
         let window = this.getWindow()
         if (window != null && window.isOpen()) {
             this._requireSync = true;

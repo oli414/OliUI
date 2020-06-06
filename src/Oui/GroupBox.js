@@ -1,30 +1,28 @@
-import Element from "../Element";
+import VerticalBox from "./VerticalBox";
+import Widget from "./Widgets/Widget";
 
-let numberCount = 0;
-function NumberGen() {
-    numberCount++;
-    return numberCount - 1;
-}
-
-class Widget extends Element {
+class GroupBox extends VerticalBox {
     constructor() {
         super();
 
-        this.setMargins(2, 4, 2, 2);
-        this._type = "none";
-        this._name = NumberGen();
+        this._name = "groupbox-" + Widget.NumberGen();
+        this._paddingTop = 13;
     }
 
     getDescription() {
+        let fullDesc = super.getDescription();
+
         let calcPos = this._getWindowPixelPosition();
-        return {
-            type: this._type,
+        fullDesc.unshift({
+            type: "groupbox",
             name: this._name,
+            text: "GroupBox",
             x: calcPos.x,
             y: calcPos.y,
             width: this.getPixelWidth(),
             height: this.getPixelHeight()
-        }
+        });
+        return fullDesc;
     }
 
     update() {
@@ -33,7 +31,7 @@ class Widget extends Element {
             let desc = this.getDescription();
             this._applyDescription(handle, desc);
         }
-        this._requireSync = false;
+        super.update();
     }
 
     getHandle() {
@@ -49,9 +47,8 @@ class Widget extends Element {
         handle.y = desc.y;
         handle.width = desc.width;
         handle.height = desc.height;
+        handle.text = desc.text;
     }
 }
 
-Widget.NumberGen = NumberGen;
-
-export default Widget;
+export default GroupBox;

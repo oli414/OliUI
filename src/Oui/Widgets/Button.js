@@ -1,20 +1,20 @@
 import Widget from "./Widget";
 
 class Button extends Widget {
-    constructor(text = "", onClick) {
+    constructor(text = "", onClick = null) {
         super();
 
         this._type = "button";
         this._text = text;
         this._name = this._type + "-" + this._name;
-        this._height = 10;
+        this._height = 13;
         this._onClick = onClick;
     }
 
     getDescription() {
         let desc = super.getDescription();
         desc.text = this._text;
-        desc.onClick = () => { this._onClick(); };
+        desc.onClick = () => { if (this._onClick) this._onClick(); };
         return desc;
     }
 
