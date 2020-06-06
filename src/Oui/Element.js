@@ -1,4 +1,5 @@
 
+
 class Element {
     constructor() {
         this._parent = null;
@@ -15,14 +16,25 @@ class Element {
         this._height = 0;
         this._hasRelativeWidth = true;
         this._hasRelativeHeight = false;
-        this._isRemainingHeightFiller = false;
+        this._isRemainingFiller = false;
 
         this._requireSync = false;
     }
 
     getPixelWidth() {
-        if (this._hasRelativeWidth) {
-            return this._parent.getContentWidth() / 100 * this._width;
+        if (this._parent == null) {
+            return this._width;
+        }
+        else if (this._isRemainingFiller && this._parent._isHorizontal) {
+            return this._parent.getRemainingWidth();
+        }
+        else if (this._hasRelativeWidth) {
+            if (!this._parent._isHorizontal) {
+                return this._parent.getContentWidth() / 100 * this._width;
+            }
+            else {
+                return (this._parent.getContentWidth() - this._parent.getTotalChildMarginWidths()) / 100 * this._width;
+            }
         }
         else {
             return this._width;
@@ -30,11 +42,19 @@ class Element {
     }
 
     getPixelHeight() {
-        if (this._isRemainingHeightFiller) {
+        if (this._parent == null) {
+            return this._height;
+        }
+        else if (this._isRemainingFiller && !this._parent._isHorizontal) {
             return this._parent.getRemainingHeight();
         }
         else if (this._hasRelativeHeight) {
-            return (this._parent.getContentHeight() - this._parent.getTotalChildMarginHeights()) / 100 * this._height;
+            if (!this._parent._isHorizontal) {
+                return (this._parent.getContentHeight() - this._parent.getTotalChildMarginHeights()) / 100 * this._height;
+            }
+            else {
+                return this._parent.getContentHeight() / 100 * this._height;
+            }
         }
         else {
             return this._height;

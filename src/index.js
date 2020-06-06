@@ -15,35 +15,39 @@ function main() {
         myWindow.setHorizontalResize(true, 100, 600);
         myWindow.setVerticalResize(true, 100, 400);
 
-        {
-            let label = new Oui.Widgets.Label("Hello World");
-            myWindow.addChild(label);
-        }
 
         {
-            let label = new Oui.Widgets.Label("Hello World 2");
-            myWindow.addChild(label);
-        }
-
-        {
-            let box = new Oui.Box();
+            let boxH = new Oui.HorizontalBox();
+            boxH.setRelativeHeight(100);
 
             {
                 let button = new Oui.Widgets.Button("Button A");
-                button.setRelativeHeight(50);
-                box.addChild(button);
+                button.setAbsoluteWidth(100);
+                button.setRelativeHeight(100);
+                boxH.addChild(button);
             }
 
             {
-                let button = new Oui.Widgets.Button("Grow", () => {
-                    myWindow.setAbsoluteWidth(myWindow.getPixelWidth() + 20);
-                });
-                button.setRelativeHeight(50);
-                box.addChild(button);
-            }
+                let boxV = new Oui.VerticalBox();
+                boxV.setRelativeHeight(100);
+                boxH.addChild(boxV);
+                boxH.setRemainingWidthFiller(boxV);
 
-            myWindow.addChild(box);
-            myWindow.setRemainingHeightFiller(box);
+                boxV.setPadding(0, 0, 0, 0);
+
+                {
+                    let button = new Oui.Widgets.Button("Button B");
+                    button.setRelativeHeight(50);
+                    boxV.addChild(button);
+                }
+
+                {
+                    let button = new Oui.Widgets.Button("Button C");
+                    button.setRelativeHeight(50);
+                    boxV.addChild(button);
+                }
+            }
+            myWindow.addChild(boxH);
         }
 
         myWindow.open();

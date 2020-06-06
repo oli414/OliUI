@@ -1,6 +1,6 @@
-import Box from "./Box";
+import VerticalBox from "./VerticalBox";
 
-class Window extends Box {
+class Window extends VerticalBox {
     constructor(title = "") {
         super();
         this._hasRelativeWidth = false;

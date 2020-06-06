@@ -10,7 +10,8 @@ class Widget extends Element {
     constructor() {
         super();
 
-        this._type = "unknown";
+        this.setMargins(0, 2, 2, 2);
+        this._type = "none";
         this._name = NumberGen();
     }
 
@@ -28,7 +29,6 @@ class Widget extends Element {
 
     update() {
         if (this.requiresSync()) {
-            console.log("requires sync");
             let handle = this.getHandle();
             let desc = this.getDescription();
             this._applyDescription(handle, desc);
