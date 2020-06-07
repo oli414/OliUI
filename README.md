@@ -11,7 +11,7 @@ The demo can be ran by placing the `OliUIDemo.js` file in `OpenRCT2/plugin/`.
 To use the module simply copy the `OliUI.js` file inside of your project's source directory. Keep in mind that it is an ES6 module and thus you will need a transpiler and module bundler to turn your project into a single ES5 file. You can use the [ES6 boilerplate](https://github.com/oli414/openrct2-plugin-boilerplate). Typescript projects can also import the module.
 
 Here's an example on what basic usage of the module would look like:
-```
+```javascript
 import Oui from "OliUI.js"
 
 function CreateWindow() 
