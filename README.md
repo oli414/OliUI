@@ -50,13 +50,15 @@ const firstElement = new Oui.Button("Top Button");
 firstElement.setMargins(0, 8, 0, 0);
 verticalBox.addChild(firstElement);
 
-// The margin between firstElement and secondElement will be 8 pixels since firstElement's bottom margin is larger then secondElement's bottom margin
+// The margin between firstElement and secondElement will be 8 pixels since 
+// firstElement's bottom margin is larger then secondElement's bottom margin
 
 const secondElement = new Oui.Button("Middle Button");
 secondElement.setMargins(2, 2, 0, 0);
 verticalBox.addChild(secondElement);
 
-// The margin between secondElement and lastElement will be 6 pixels since lastElement's top margin is larger then secondElement's bottom margin
+// The margin between secondElement and lastElement will be 6 pixels since 
+// lastElement's top margin is larger then secondElement's bottom margin
 
 const lastElement = new Oui.Button("Bottom Button");
 lastElement.setMargins(6, 0, 0, 0);
