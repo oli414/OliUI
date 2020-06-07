@@ -30,7 +30,6 @@ class Checkbox extends Widget {
 
     _applyDescription(handle, desc) {
         super._applyDescription(handle, desc);
-        handle.onChange = desc.onChange;
         handle.text = desc.text;
     }
 }

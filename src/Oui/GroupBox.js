@@ -2,11 +2,34 @@ import VerticalBox from "./VerticalBox";
 import Widget from "./Widgets/Widget";
 
 class GroupBox extends VerticalBox {
-    constructor() {
+    constructor(text = "") {
         super();
 
+        this._text = text;
         this._name = "groupbox-" + Widget.NumberGen();
-        this._paddingTop = 13;
+        if (this._text != "")
+            this._paddingTop = 13;
+        else
+            this._paddingTop = 8;
+        this._paddingBottom = 5;
+    }
+
+    getText() {
+        return this._text;
+    }
+
+    setText(text) {
+        if (Boolean(this._text.length) != Boolean(text.length)) {
+            if (text.length == 0) {
+                this._paddingTop -= 5;
+            }
+            else {
+                this._paddingTop += 5;
+            }
+            this.onDimensionsChanged();
+        }
+        this._text = text;
+        this.requestSync();
     }
 
     getDescription() {
@@ -16,7 +39,7 @@ class GroupBox extends VerticalBox {
         fullDesc.unshift({
             type: "groupbox",
             name: this._name,
-            text: "GroupBox",
+            text: this._text,
             x: calcPos.x,
             y: calcPos.y,
             width: this.getPixelWidth(),
@@ -29,7 +52,7 @@ class GroupBox extends VerticalBox {
         if (this.requiresSync()) {
             let handle = this.getHandle();
             let desc = this.getDescription();
-            this._applyDescription(handle, desc);
+            this._applyDescription(handle, desc[0]);
         }
         super.update();
     }

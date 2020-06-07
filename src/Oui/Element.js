@@ -73,10 +73,34 @@ class Element {
         }
     }
 
+    getRelativeWidth() {
+        if (this._hasRelativeWidth) {
+            return this._width;
+        }
+        else {
+            if (this._parent != null) {
+                return this._width / this._parent.getContentWidth() * 100;
+            }
+            throw new Error("The relative width could not be calculated since this element does not have a parent");
+        }
+    }
+
     setRelativeWidth(percentage) {
         this._width = percentage;
         this._hasRelativeWidth = true;
         this.onDimensionsChanged();
+    }
+
+    getRelativeHeight() {
+        if (this._hasRelativeHeight) {
+            return this._height;
+        }
+        else {
+            if (this._parent != null) {
+                return this._height / this._parent.getContentHeight() * 100;
+            }
+            throw new Error("The relative height could not be calculated since this element does not have a parent");
+        }
     }
 
     setRelativeHeight(percentage) {
@@ -85,16 +109,25 @@ class Element {
         this.onDimensionsChanged();
     }
 
-    setAbsoluteWidth(pixels) {
+    setWidth(pixels) {
         this._width = pixels;
         this._hasRelativeWidth = false;
         this.onDimensionsChanged();
     }
 
-    setAbsoluteHeight(pixels) {
+    setHeight(pixels) {
         this._height = pixels;
         this._hasRelativeHeight = false;
         this.onDimensionsChanged();
+    }
+
+    getMargins() {
+        return {
+            top: this._marginTop,
+            bottom: this._marginBottom,
+            left: this._marginLeft,
+            right: this._marginRight
+        }
     }
 
     setMargins(top, bottom, left, right) {

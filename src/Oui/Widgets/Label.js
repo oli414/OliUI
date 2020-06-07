@@ -10,6 +10,15 @@ class Label extends Widget {
         this._height = 10;
     }
 
+    getText() {
+        return this._text;
+    }
+
+    setText(text) {
+        this._text = text;
+        this.requestSync();
+    }
+
     getDescription() {
         let desc = super.getDescription();
         desc.text = this._text;

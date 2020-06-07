@@ -29,7 +29,7 @@ class VerticalBox extends Box {
         }
 
         if (!this._hasRelativeHeight && yPos + this._paddingBottom > this._height) {
-            this.setAbsoluteHeight(yPos + this._paddingBottom);
+            this.setHeight(yPos + this._paddingBottom);
         }
     }
 

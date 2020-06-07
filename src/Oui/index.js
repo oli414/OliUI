@@ -6,6 +6,7 @@ import VerticalBox from "./VerticalBox";
 import HorizontalBox from "./HorizontalBox";
 import Dropdown from "./Widgets/Dropdown";
 import GroupBox from "./GroupBox";
+import Spinner from "./Widgets/Spinner";
 
 const Oui = {
     Window: Window,
@@ -16,7 +17,8 @@ const Oui = {
         Label: Label,
         Button: Button,
         Checkbox: Checkbox,
-        Dropdown: Dropdown
+        Dropdown: Dropdown,
+        Spinner: Spinner
     }
 };
 

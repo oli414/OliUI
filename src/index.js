@@ -8,13 +8,13 @@ import Oui from "./Oui/index";
 
 
 function main() {
-    ui.registerMenuItem("WindowAPI Demo", function () {
+    ui.registerMenuItem("OliUI Demo", function () {
 
         let myWindow = new Oui.Window("My Window");
-        myWindow.setAbsoluteWidth(300);
+        myWindow.setWidth(300);
 
         {
-            let groupBox = new Oui.GroupBox("Label");
+            let groupBox = new Oui.GroupBox();
             myWindow.addChild(groupBox);
 
             {
@@ -24,7 +24,13 @@ function main() {
 
 
             {
-                let button = new Oui.Widgets.Button("Label", () => { console.log("On click") });
+                let button = new Oui.Widgets.Button("Label", () => {
+                    console.log("On click")
+                    if (groupBox.getText() == "")
+                        groupBox.setText("Group Box");
+                    else
+                        groupBox.setText("");
+                });
                 groupBox.addChild(button);
             }
 
@@ -33,11 +39,14 @@ function main() {
                 groupBox.addChild(checkBox);
             }
 
-
-
             {
                 let dropdown = new Oui.Widgets.Dropdown(["Option A", "Option B", "Option C"], (i) => { console.log("On change " + i) });
                 groupBox.addChild(dropdown);
+            }
+
+            {
+                let spinner = new Oui.Widgets.Spinner(0, 0.1, (val) => { console.log("On change " + val) });
+                groupBox.addChild(spinner);
             }
         }
 
@@ -46,7 +55,7 @@ function main() {
 }
 
 registerPlugin({
-    name: 'WindowAPIDemo',
+    name: 'OliUIDemo',
     version: '1.0',
     authors: ['Oli414'],
     type: 'local',

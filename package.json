@@ -1,10 +1,10 @@
 {
-  "name": "WindowAPI",
+  "name": "OliUI",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rollup ./src/index.js --file ./build/WindowAPI.js && babel ./build/WindowAPI.js --out-file ./build/WindowAPI.js && cpy ./build/WindowAPI.js ../../plugin/ --rename=WindowAPI.js",
+    "build": "rollup ./src/index.js --file ./build/OliUIDemo.js && babel ./build/OliUIDemo.js --out-file ./build/OliUIDemo.js && cpy ./build/OliUIDemo.js ../../plugin/ --rename=OliUIDemo.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "npm-watch"
   },

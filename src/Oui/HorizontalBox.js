@@ -30,7 +30,7 @@ class HorizontalBox extends Box {
         }
 
         if (!this._hasRelativeWidth && xPos + this._paddingRight > this._width) {
-            this.setAbsoluteWidth(xPos + this._paddingRight);
+            this.setWidth(xPos + this._paddingRight);
         }
     }
 

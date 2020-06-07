@@ -12,6 +12,10 @@ class Dropdown extends Widget {
         this._selectedIndex = 0;
     }
 
+    getItems() {
+        return this._items.slice(0);
+    }
+
     setItems(items) {
         this._items = items.slice(0);
         this.requestSync();
@@ -30,7 +34,6 @@ class Dropdown extends Widget {
 
     _applyDescription(handle, desc) {
         super._applyDescription(handle, desc);
-        handle.onChange = desc.onChange;
         handle.items = desc.items;
         desc.selectedIndex = desc.selectedIndex;
     }

@@ -48,6 +48,15 @@ class Box extends Element {
         return height;
     }
 
+    getMargins() {
+        return {
+            top: this._paddingTop,
+            bottom: this._paddingBottom,
+            left: this._paddingLeft,
+            right: this._paddingRight
+        }
+    }
+
     setPadding(top, bottom, left, right) {
         this._paddingTop = top;
         this._paddingBottom = bottom;

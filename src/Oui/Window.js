@@ -77,24 +77,24 @@ class Window extends VerticalBox {
         }
     }
 
-    setAbsoluteWidth(pixels) {
+    setWidth(pixels) {
         if (this.isOpen()) {
             this._handle.width = pixels;
         }
-        super.setAbsoluteWidth(pixels);
+        super.setWidth(pixels);
         if (!this._canResizeHorizontally) {
             this._minWidth = this._width;
             this._maxWidth = this._width;
         }
     }
 
-    setAbsoluteHeight(pixels) {
+    setHeight(pixels) {
         if (pixels < 16)
             pixels = 16;
         if (this.isOpen()) {
             this._handle.height = pixels;
         }
-        super.setAbsoluteHeight(pixels);
+        super.setHeight(pixels);
         if (!this._canResizeVertically) {
             this._minHeight = this._height;
             this._maxHeight = this._height;
@@ -118,8 +118,8 @@ class Window extends VerticalBox {
 
     update() {
         if (this._handle.width != this._width || this._handle.height != this._height) {
-            this.setAbsoluteWidth(this._handle.width);
-            this.setAbsoluteHeight(this._handle.height);
+            this.setWidth(this._handle.width);
+            this.setHeight(this._handle.height);
         }
         super.update();
         this._requireSync = false;
