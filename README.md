@@ -19,19 +19,19 @@ function CreateWindow()
     const window = new Oui.Window("My Window");
     window.setWidth(300);
     
-    const label = new Oui.Widget.Label("Hello World!");
+    const label = new Oui.Widgets.Label("Hello World!");
     window.addChild(label);
     
     const groupbox = new Oui.GroupBox("Input Widgets");
     window.addChild(groupbox);
     
-    const spinner = new Oui.Widget.Spinner(5, 1);
+    const spinner = new Oui.Widgets.Spinner(5, 1);
     groupbox.addChild(spinner);
     
-    const button = new Oui.Widget.Button("Click Me!", () => {
+    const button = new Oui.Widgets.Button("Click Me!", () => {
         button.setText("I was clicked!");
     });
-    groupbox.addChild(groupBox);
+    groupbox.addChild(button);
     
     window.open();
 }
@@ -41,13 +41,79 @@ function CreateWindow()
 The main box element for creating layouts is the VerticalBox. The Window itself derives from the VerticalBox and makes sure that all the children are spaced out vertically. 
 The padding on a box leaves some space on the inside between the box and the elements inside of a box.
 Between each element within a box there's a margin which is used to space out the elements inside of a box from each other. The largest margin between each 2 elements is used.
+```javascript
+const verticalBox = new Oui.VerticalBox();
+verticalBox.setPadding(8, 8, 8, 8) 
+// The children will leave an 8 pixel large padding between them and the verticalBox
+
+const firstElement = new Oui.Button("Top Button");
+firstElement.setMargins(0, 8, 0, 0);
+verticalBox.addChild(firstElement);
+
+// The margin between firstElement and secondElement will be 8 pixels since firstElement's bottom margin is larger then secondElement's bottom margin
+
+const secondElement = new Oui.Button("Middle Button");
+secondElement.setMargins(2, 2, 0, 0);
+verticalBox.addChild(secondElement);
+
+// The margin between secondElement and lastElement will be 6 pixels since lastElement's top margin is larger then secondElement's bottom margin
+
+const lastElement = new Oui.Button("Bottom Button");
+lastElement.setMargins(6, 0, 0, 0);
+verticalBox.addChild(lastElement);
+
+window.addChild(verticalBox);
+```
 
 On each element the size can be set either absolute or relative. An absolute size specifies the size in pixels while a relative size specifies the size in the percentage. A relative size scales relative to the parent element.
 All elements have a relative width of 100% by default.
+```javascript
+const verticalBox = new Oui.VerticalBox();
+verticalBox.setHeight(400);
+
+const firstElement = new Oui.Button("Top Button");
+firstElement.setRelativeHeight(50);
+verticalBox.addChild(firstElement);
+
+const secondElement = new Oui.Button("Bottom Button");
+secondElement.setRelativeHeight(50);
+verticalBox.addChild(secondElement);
+
+window.addChild(verticalBox);
+```
 
 The HorizontalBox can be used when the child elements should be spaced out next to each other in a horizontal fashion.
+```javascript
+const horizontalBox = new Oui.HorizontalBox();
+
+const firstElement = new Oui.Button("Left Button");
+firstElement.setRelativeWidth(50);
+horizontalBox.addChild(firstElement);
+
+const secondElement = new Oui.Button("Right Button");
+secondElement.setRelativeWidth(50);
+horizontalBox.addChild(secondElement);
+
+window.addChild(horizontalBox);
+```
 
 Both the VerticalBox and HorizontalBox allow you to set a single child element to fill the remaining space. For the VerticalBox this is the remaining vertical space and for the HorizontalBox this is the remaining horizontal space.
+```javascript
+const verticalBox = new Oui.VerticalBox();
+verticalBox.setHeight(400);
+
+const firstElement = new Oui.Button("Top Button");
+firstElement.setRelativeHeight(30);
+verticalBox.addChild(firstElement);
+
+const secondElement = new Oui.Button("Bottom Button");
+verticalBox.addChild(secondElement);
+
+verticalBox.setRemainingHeightFiller(secondElement);
+// secondElement will fill the remaining 70% of height.
+
+window.addChild(verticalBox);
+```
 
 ## Future Plans
 - Remove and add elements after a window has been opened.

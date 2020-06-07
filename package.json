@@ -8,7 +8,7 @@
     "build-demo": "rollup ./src/index.js --file ./demobuild/OliUIDemo.js && babel ./demobuild/OliUIDemo.js --out-file ./demobuild/OliUIDemo.js && cpy ./demobuild/OliUIDemo.js ../../plugin/ --rename=OliUIDemo.js",
     "build-module": "rollup ./src/Oui/index.js --file ./build/OliUI.js --format es",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npm-watch build"
+    "watch": "npm-watch"
   },
   "watch": {
     "build": "src/*"
