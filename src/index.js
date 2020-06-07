@@ -1,8 +1,7 @@
 // Expose the OpenRCT2 to Visual Studio Code's Intellisense
 /// <reference path="../../../bin/openrct2.d.ts" />
 
-// Import a module from another file.
-import Message from "./module";
+// Importing the OliUI library.
 import Oui from "./Oui/index";
 
 

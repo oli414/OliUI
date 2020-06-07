@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rollup ./src/index.js --file ./build/OliUIDemo.js && babel ./build/OliUIDemo.js --out-file ./build/OliUIDemo.js && cpy ./build/OliUIDemo.js ../../plugin/ --rename=OliUIDemo.js",
+    "build": "npm run build-demo && npm run build-module",
+    "build-demo": "rollup ./src/index.js --file ./demobuild/OliUIDemo.js && babel ./demobuild/OliUIDemo.js --out-file ./demobuild/OliUIDemo.js && cpy ./demobuild/OliUIDemo.js ../../plugin/ --rename=OliUIDemo.js",
+    "build-module": "rollup ./src/Oui/index.js --file ./build/OliUI.js --format es",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npm-watch"
+    "watch": "npm-watch build"
   },
   "watch": {
     "build": "src/*"
