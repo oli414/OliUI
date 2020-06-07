@@ -1,4 +1,6 @@
-# openrct2-oli-ui
+# OliUI
+OliUI is still under construction. Only use for testing.
+
 OliUI is an OpenRCT2 plugin module to easily construct and control UI windows.
 
 ## Layout
