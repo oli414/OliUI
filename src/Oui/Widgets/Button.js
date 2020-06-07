@@ -20,8 +20,8 @@ class Button extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._text;
         desc.onClick = () => { if (this._onClick) this._onClick(); };
         return desc;

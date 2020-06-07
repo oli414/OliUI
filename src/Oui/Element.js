@@ -41,6 +41,12 @@ class Element {
         }
     }
 
+    setWidth(pixels) {
+        this._width = pixels;
+        this._hasRelativeWidth = false;
+        this.onDimensionsChanged();
+    }
+
     getPixelHeight() {
         if (this._parent == null) {
             return this._height;
@@ -61,16 +67,10 @@ class Element {
         }
     }
 
-    _getWindowPixelPosition() {
-        if (this._parent) {
-            let pos = this._parent._getWindowPixelPosition();
-            pos.x += this._x;
-            pos.y += this._y;
-            return pos;
-        }
-        else {
-            return { x: this._x, y: this._y };
-        }
+    setHeight(pixels) {
+        this._height = pixels;
+        this._hasRelativeHeight = false;
+        this.onDimensionsChanged();
     }
 
     getRelativeWidth() {
@@ -109,18 +109,6 @@ class Element {
         this.onDimensionsChanged();
     }
 
-    setWidth(pixels) {
-        this._width = pixels;
-        this._hasRelativeWidth = false;
-        this.onDimensionsChanged();
-    }
-
-    setHeight(pixels) {
-        this._height = pixels;
-        this._hasRelativeHeight = false;
-        this.onDimensionsChanged();
-    }
-
     getMargins() {
         return {
             top: this._marginTop,
@@ -143,17 +131,6 @@ class Element {
         return this._parent.getWindow();
     }
 
-    getDescription() {
-        return null;
-    }
-
-    onDimensionsChanged() {
-        if (this._parent != null) {
-            this._parent.updateChildDimensions();
-        }
-        this.requestSync();
-    }
-
     requestSync() {
         let window = this.getWindow()
         if (window != null && window.isOpen()) {
@@ -161,15 +138,38 @@ class Element {
         }
     }
 
-    update() {
-        this._requireSync = false;
-    }
-
     requiresSync() {
         if (this._parent != null) {
             return this._requireSync || this._parent.requiresSync();
         }
         return this._requireSync;
+    }
+
+    onDimensionsChanged() {
+        if (this._parent != null) {
+            this._parent._updateChildDimensions();
+        }
+        this.requestSync();
+    }
+
+    _getDescription() {
+        return null;
+    }
+
+    _update() {
+        this._requireSync = false;
+    }
+
+    _getWindowPixelPosition() {
+        if (this._parent) {
+            let pos = this._parent._getWindowPixelPosition();
+            pos.x += this._x;
+            pos.y += this._y;
+            return pos;
+        }
+        else {
+            return { x: this._x, y: this._y };
+        }
     }
 }
 

@@ -17,8 +17,8 @@ class Checkbox extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._text;
         desc.onChange = (checked) => {
             this._isChecked = checked;

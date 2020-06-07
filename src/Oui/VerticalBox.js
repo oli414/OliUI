@@ -9,13 +9,12 @@ class VerticalBox extends Box {
 
     addChild(child) {
         super.addChild(child);
-        this.updateChildDimensions();
         if (child._hasRelativeHeight) {
             child.onDimensionsChanged();
         }
     }
 
-    updateChildDimensions() {
+    _updateChildDimensions() {
         let yPos = this._paddingTop;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
@@ -56,7 +55,7 @@ class VerticalBox extends Box {
         }
         this._remainingHeightFiller = child;
         child._isRemainingFiller = true;
-        this.updateChildDimensions();
+        this._updateChildDimensions();
         child.onDimensionsChanged();
     }
 }

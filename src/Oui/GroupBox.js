@@ -32,8 +32,8 @@ class GroupBox extends VerticalBox {
         this.requestSync();
     }
 
-    getDescription() {
-        let fullDesc = super.getDescription();
+    _getDescription() {
+        let fullDesc = super._getDescription();
 
         let calcPos = this._getWindowPixelPosition();
         fullDesc.unshift({
@@ -48,13 +48,13 @@ class GroupBox extends VerticalBox {
         return fullDesc;
     }
 
-    update() {
+    _update() {
         if (this.requiresSync()) {
             let handle = this.getHandle();
-            let desc = this.getDescription();
+            let desc = this._getDescription();
             this._applyDescription(handle, desc[0]);
         }
-        super.update();
+        super._update();
     }
 
     getHandle() {

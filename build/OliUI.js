@@ -39,6 +39,12 @@ class Element {
         }
     }
 
+    setWidth(pixels) {
+        this._width = pixels;
+        this._hasRelativeWidth = false;
+        this.onDimensionsChanged();
+    }
+
     getPixelHeight() {
         if (this._parent == null) {
             return this._height;
@@ -59,16 +65,10 @@ class Element {
         }
     }
 
-    _getWindowPixelPosition() {
-        if (this._parent) {
-            let pos = this._parent._getWindowPixelPosition();
-            pos.x += this._x;
-            pos.y += this._y;
-            return pos;
-        }
-        else {
-            return { x: this._x, y: this._y };
-        }
+    setHeight(pixels) {
+        this._height = pixels;
+        this._hasRelativeHeight = false;
+        this.onDimensionsChanged();
     }
 
     getRelativeWidth() {
@@ -107,18 +107,6 @@ class Element {
         this.onDimensionsChanged();
     }
 
-    setWidth(pixels) {
-        this._width = pixels;
-        this._hasRelativeWidth = false;
-        this.onDimensionsChanged();
-    }
-
-    setHeight(pixels) {
-        this._height = pixels;
-        this._hasRelativeHeight = false;
-        this.onDimensionsChanged();
-    }
-
     getMargins() {
         return {
             top: this._marginTop,
@@ -141,17 +129,6 @@ class Element {
         return this._parent.getWindow();
     }
 
-    getDescription() {
-        return null;
-    }
-
-    onDimensionsChanged() {
-        if (this._parent != null) {
-            this._parent.updateChildDimensions();
-        }
-        this.requestSync();
-    }
-
     requestSync() {
         let window = this.getWindow();
         if (window != null && window.isOpen()) {
@@ -159,15 +136,38 @@ class Element {
         }
     }
 
-    update() {
-        this._requireSync = false;
-    }
-
     requiresSync() {
         if (this._parent != null) {
             return this._requireSync || this._parent.requiresSync();
         }
         return this._requireSync;
+    }
+
+    onDimensionsChanged() {
+        if (this._parent != null) {
+            this._parent._updateChildDimensions();
+        }
+        this.requestSync();
+    }
+
+    _getDescription() {
+        return null;
+    }
+
+    _update() {
+        this._requireSync = false;
+    }
+
+    _getWindowPixelPosition() {
+        if (this._parent) {
+            let pos = this._parent._getWindowPixelPosition();
+            pos.x += this._x;
+            pos.y += this._y;
+            return pos;
+        }
+        else {
+            return { x: this._x, y: this._y };
+        }
     }
 }
 
@@ -187,6 +187,8 @@ class Box extends Element {
     addChild(child) {
         this._children.push(child);
         child._parent = this;
+
+        this._updateChildDimensions();
     }
 
     getContentWidth() {
@@ -195,6 +197,33 @@ class Box extends Element {
 
     getContentHeight() {
         return this.getPixelHeight() - this._paddingTop - this._paddingBottom;
+    }
+
+    getMargins() {
+        return {
+            top: this._paddingTop,
+            bottom: this._paddingBottom,
+            left: this._paddingLeft,
+            right: this._paddingRight
+        }
+    }
+
+    setPadding(top, bottom, left, right) {
+        this._paddingTop = top;
+        this._paddingBottom = bottom;
+        this._paddingLeft = left;
+        this._paddingRight = right;
+    }
+
+    onDimensionsChanged() {
+        this._updateChildDimensions();
+        for (let i = 0; i < this._children.length; i++) {
+            let child = this._children[i];
+            if (child._hasRelativeWidth || child._hasRelativeHeight) {
+                child.onDimensionsChanged();
+            }
+        }
+        super.onDimensionsChanged();
     }
 
     getTotalChildMarginWidths() {
@@ -219,26 +248,14 @@ class Box extends Element {
         return height;
     }
 
-    getMargins() {
-        return {
-            top: this._paddingTop,
-            bottom: this._paddingBottom,
-            left: this._paddingLeft,
-            right: this._paddingRight
-        }
+    _updateChildDimensions() {
+
     }
 
-    setPadding(top, bottom, left, right) {
-        this._paddingTop = top;
-        this._paddingBottom = bottom;
-        this._paddingLeft = left;
-        this._paddingRight = right;
-    }
-
-    getDescription() {
+    _getDescription() {
         let fullDesc = [];
         for (let i = 0; i < this._children.length; i++) {
-            let rDesc = this._children[i].getDescription();
+            let rDesc = this._children[i]._getDescription();
             if (rDesc != null) {
                 if (Array.isArray(rDesc)) {
                     fullDesc = fullDesc.concat(rDesc);
@@ -251,20 +268,9 @@ class Box extends Element {
         return fullDesc;
     }
 
-    onDimensionsChanged() {
-        this.updateChildDimensions();
+    _update() {
         for (let i = 0; i < this._children.length; i++) {
-            let child = this._children[i];
-            if (child._hasRelativeWidth || child._hasRelativeHeight) {
-                child.onDimensionsChanged();
-            }
-        }
-        super.onDimensionsChanged();
-    }
-
-    update() {
-        for (let i = 0; i < this._children.length; i++) {
-            this._children[i].update();
+            this._children[i]._update();
         }
         this._requireSync = false;
     }
@@ -279,13 +285,12 @@ class VerticalBox extends Box {
 
     addChild(child) {
         super.addChild(child);
-        this.updateChildDimensions();
         if (child._hasRelativeHeight) {
             child.onDimensionsChanged();
         }
     }
 
-    updateChildDimensions() {
+    _updateChildDimensions() {
         let yPos = this._paddingTop;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
@@ -326,7 +331,7 @@ class VerticalBox extends Box {
         }
         this._remainingHeightFiller = child;
         child._isRemainingFiller = true;
-        this.updateChildDimensions();
+        this._updateChildDimensions();
         child.onDimensionsChanged();
     }
 }
@@ -353,7 +358,7 @@ class Window extends VerticalBox {
     }
 
     open() {
-        let desc = this.getDescription();
+        let desc = this._getDescription();
         this._handle = ui.openWindow(desc);
     }
 
@@ -361,8 +366,8 @@ class Window extends VerticalBox {
         return this._handle != null;
     }
 
-    getDescription() {
-        let widgets = super.getDescription();
+    _getDescription() {
+        let widgets = super._getDescription();
 
         return {
             classification: this._classification,
@@ -375,7 +380,7 @@ class Window extends VerticalBox {
             title: this._title,
             widgets: widgets,
             onUpdate: () => {
-                this.update();
+                this._update();
             }
         }
     }
@@ -447,12 +452,12 @@ class Window extends VerticalBox {
         this._paddingRight = right;
     }
 
-    update() {
+    _update() {
         if (this._handle.width != this._width || this._handle.height != this._height) {
             this.setWidth(this._handle.width);
             this.setHeight(this._handle.height);
         }
-        super.update();
+        super._update();
         this._requireSync = false;
     }
 }
@@ -472,7 +477,7 @@ class Widget extends Element {
         this._name = NumberGen();
     }
 
-    getDescription() {
+    _getDescription() {
         let calcPos = this._getWindowPixelPosition();
         return {
             type: this._type,
@@ -484,10 +489,10 @@ class Widget extends Element {
         }
     }
 
-    update() {
+    _update() {
         if (this.requiresSync()) {
             let handle = this.getHandle();
-            let desc = this.getDescription();
+            let desc = this._getDescription();
             this._applyDescription(handle, desc);
         }
         this._requireSync = false;
@@ -530,8 +535,8 @@ class Label extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._text;
         return desc;
     }
@@ -562,8 +567,8 @@ class Button extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._text;
         desc.onClick = () => { if (this._onClick) this._onClick(); };
         return desc;
@@ -592,8 +597,8 @@ class Checkbox extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._text;
         desc.onChange = (checked) => {
             this._isChecked = checked;
@@ -619,13 +624,12 @@ class HorizontalBox extends Box {
 
     addChild(child) {
         super.addChild(child);
-        this.updateChildDimensions();
         if (child._hasRelativeWidth) {
             child.onDimensionsChanged();
         }
     }
 
-    updateChildDimensions() {
+    _updateChildDimensions() {
         let xPos = this._paddingLeft;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
@@ -666,7 +670,7 @@ class HorizontalBox extends Box {
         }
         this._remainingWidthFiller = child;
         child._isRemainingFiller = true;
-        this.updateChildDimensions();
+        this._updateChildDimensions();
         child.onDimensionsChanged();
     }
 }
@@ -692,8 +696,8 @@ class Dropdown extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.items = this._items;
         desc.onChange = (i) => {
             this._selectedIndex = i;
@@ -741,8 +745,8 @@ class GroupBox extends VerticalBox {
         this.requestSync();
     }
 
-    getDescription() {
-        let fullDesc = super.getDescription();
+    _getDescription() {
+        let fullDesc = super._getDescription();
 
         let calcPos = this._getWindowPixelPosition();
         fullDesc.unshift({
@@ -757,13 +761,13 @@ class GroupBox extends VerticalBox {
         return fullDesc;
     }
 
-    update() {
+    _update() {
         if (this.requiresSync()) {
             let handle = this.getHandle();
-            let desc = this.getDescription();
+            let desc = this._getDescription();
             this._applyDescription(handle, desc[0]);
         }
-        super.update();
+        super._update();
     }
 
     getHandle() {
@@ -829,8 +833,8 @@ class Spinner extends Widget {
         return 0;
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._value.toFixed(this._decimals);
         desc.onIncrement = () => {
             this._value += this._step;

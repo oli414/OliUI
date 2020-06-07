@@ -15,7 +15,7 @@ class Widget extends Element {
         this._name = NumberGen();
     }
 
-    getDescription() {
+    _getDescription() {
         let calcPos = this._getWindowPixelPosition();
         return {
             type: this._type,
@@ -27,10 +27,10 @@ class Widget extends Element {
         }
     }
 
-    update() {
+    _update() {
         if (this.requiresSync()) {
             let handle = this.getHandle();
-            let desc = this.getDescription();
+            let desc = this._getDescription();
             this._applyDescription(handle, desc);
         }
         this._requireSync = false;

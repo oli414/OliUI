@@ -10,13 +10,12 @@ class HorizontalBox extends Box {
 
     addChild(child) {
         super.addChild(child);
-        this.updateChildDimensions();
         if (child._hasRelativeWidth) {
             child.onDimensionsChanged();
         }
     }
 
-    updateChildDimensions() {
+    _updateChildDimensions() {
         let xPos = this._paddingLeft;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
@@ -57,7 +56,7 @@ class HorizontalBox extends Box {
         }
         this._remainingWidthFiller = child;
         child._isRemainingFiller = true;
-        this.updateChildDimensions();
+        this._updateChildDimensions();
         child.onDimensionsChanged();
     }
 }

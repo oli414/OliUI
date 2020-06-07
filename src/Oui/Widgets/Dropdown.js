@@ -21,8 +21,8 @@ class Dropdown extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.items = this._items;
         desc.onChange = (i) => {
             this._selectedIndex = i;

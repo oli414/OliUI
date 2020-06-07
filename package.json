@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build-demo && npm run build-module",
-    "build-demo": "rollup ./src/index.js --file ./demobuild/OliUIDemo.js && babel ./demobuild/OliUIDemo.js --out-file ./demobuild/OliUIDemo.js && cpy ./demobuild/OliUIDemo.js ../../plugin/ --rename=OliUIDemo.js",
+    "build-demo": "rollup ./src/index.js --file ./demobuild/OliUIDemo.js --format iife && babel ./demobuild/OliUIDemo.js --out-file ./demobuild/OliUIDemo.js && cpy ./demobuild/OliUIDemo.js ../../plugin/ --rename=OliUIDemo.js",
     "build-module": "rollup ./src/Oui/index.js --file ./build/OliUI.js --format es",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "npm-watch"
@@ -24,6 +24,5 @@
     "cpy-cli": "^3.1.1",
     "npm-watch": "^0.6.0",
     "rollup": "^2.7.2"
-  },
-  "dependencies": {}
+  }
 }

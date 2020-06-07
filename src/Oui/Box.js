@@ -16,6 +16,8 @@ class Box extends Element {
     addChild(child) {
         this._children.push(child);
         child._parent = this;
+
+        this._updateChildDimensions();
     }
 
     getContentWidth() {
@@ -24,6 +26,33 @@ class Box extends Element {
 
     getContentHeight() {
         return this.getPixelHeight() - this._paddingTop - this._paddingBottom;
+    }
+
+    getMargins() {
+        return {
+            top: this._paddingTop,
+            bottom: this._paddingBottom,
+            left: this._paddingLeft,
+            right: this._paddingRight
+        }
+    }
+
+    setPadding(top, bottom, left, right) {
+        this._paddingTop = top;
+        this._paddingBottom = bottom;
+        this._paddingLeft = left;
+        this._paddingRight = right;
+    }
+
+    onDimensionsChanged() {
+        this._updateChildDimensions();
+        for (let i = 0; i < this._children.length; i++) {
+            let child = this._children[i];
+            if (child._hasRelativeWidth || child._hasRelativeHeight) {
+                child.onDimensionsChanged();
+            }
+        }
+        super.onDimensionsChanged();
     }
 
     getTotalChildMarginWidths() {
@@ -48,26 +77,14 @@ class Box extends Element {
         return height;
     }
 
-    getMargins() {
-        return {
-            top: this._paddingTop,
-            bottom: this._paddingBottom,
-            left: this._paddingLeft,
-            right: this._paddingRight
-        }
+    _updateChildDimensions() {
+
     }
 
-    setPadding(top, bottom, left, right) {
-        this._paddingTop = top;
-        this._paddingBottom = bottom;
-        this._paddingLeft = left;
-        this._paddingRight = right;
-    }
-
-    getDescription() {
+    _getDescription() {
         let fullDesc = [];
         for (let i = 0; i < this._children.length; i++) {
-            let rDesc = this._children[i].getDescription();
+            let rDesc = this._children[i]._getDescription();
             if (rDesc != null) {
                 if (Array.isArray(rDesc)) {
                     fullDesc = fullDesc.concat(rDesc);
@@ -80,20 +97,9 @@ class Box extends Element {
         return fullDesc;
     }
 
-    onDimensionsChanged() {
-        this.updateChildDimensions();
+    _update() {
         for (let i = 0; i < this._children.length; i++) {
-            let child = this._children[i];
-            if (child._hasRelativeWidth || child._hasRelativeHeight) {
-                child.onDimensionsChanged();
-            }
-        }
-        super.onDimensionsChanged();
-    }
-
-    update() {
-        for (let i = 0; i < this._children.length; i++) {
-            this._children[i].update();
+            this._children[i]._update();
         }
         this._requireSync = false;
     }

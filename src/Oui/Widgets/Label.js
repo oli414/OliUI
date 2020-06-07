@@ -19,8 +19,8 @@ class Label extends Widget {
         this.requestSync();
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._text;
         return desc;
     }

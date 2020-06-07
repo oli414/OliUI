@@ -46,8 +46,8 @@ class Spinner extends Widget {
         return 0;
     }
 
-    getDescription() {
-        let desc = super.getDescription();
+    _getDescription() {
+        let desc = super._getDescription();
         desc.text = this._value.toFixed(this._decimals);
         desc.onIncrement = () => {
             this._value += this._step;

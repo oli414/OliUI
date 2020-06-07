@@ -22,7 +22,7 @@ class Window extends VerticalBox {
     }
 
     open() {
-        let desc = this.getDescription();
+        let desc = this._getDescription();
         this._handle = ui.openWindow(desc);
     }
 
@@ -30,8 +30,8 @@ class Window extends VerticalBox {
         return this._handle != null;
     }
 
-    getDescription() {
-        let widgets = super.getDescription();
+    _getDescription() {
+        let widgets = super._getDescription();
 
         return {
             classification: this._classification,
@@ -44,7 +44,7 @@ class Window extends VerticalBox {
             title: this._title,
             widgets: widgets,
             onUpdate: () => {
-                this.update();
+                this._update();
             }
         }
     }
@@ -116,12 +116,12 @@ class Window extends VerticalBox {
         this._paddingRight = right;
     }
 
-    update() {
+    _update() {
         if (this._handle.width != this._width || this._handle.height != this._height) {
             this.setWidth(this._handle.width);
             this.setHeight(this._handle.height);
         }
-        super.update();
+        super._update();
         this._requireSync = false;
     }
 }
