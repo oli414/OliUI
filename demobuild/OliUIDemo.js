@@ -2690,19 +2690,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             {
                 var _button = new Oui.Widgets.Button("Add Item", function () {
-                    listView.addItem(["Bas", "30", "100"]);
+                    listView.addItem(["Kees", "33", "800"]);
                 });
                 myWindow.addChild(_button);
             }
 
-            var viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
+            /*
+            let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
             myWindow.addChild(viewportWidget);
             myWindow.setRemainingHeightFiller(viewportWidget);
-
-            viewportWidget.setView(1000, 1000);
+             viewportWidget.setView(1000, 1000);
             //viewportWidget.setRotation(1);
+            */
 
             myWindow.open();
+
+            CreateWindow();
         });
     }
 

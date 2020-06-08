@@ -7,7 +7,6 @@ import Oui from "./Oui/index";
 function main() {
     ui.registerMenuItem("OliUI Demo", function () {
 
-
         let myWindow = new Oui.Window("My Window");
         myWindow.setWidth(300);
         myWindow.setHorizontalResize(true, 200, 600);
@@ -89,22 +88,26 @@ function main() {
         {
             let button = new Oui.Widgets.Button("Add Item", () => {
                 listView.addItem([
-                    "Bas",
-                    "30",
-                    "100"
+                    "Kees",
+                    "33",
+                    "800"
                 ]);
             });
             myWindow.addChild(button);
         }
 
+        /*
         let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
         myWindow.addChild(viewportWidget);
         myWindow.setRemainingHeightFiller(viewportWidget);
 
         viewportWidget.setView(1000, 1000);
         //viewportWidget.setRotation(1);
+        */
 
         myWindow.open();
+
+        CreateWindow();
     });
 }
 
