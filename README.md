@@ -3,10 +3,6 @@ OliUI is an OpenRCT2 plugin module to easily construct and control UI windows of
 
 Creating UI windows with the OpenRCT2 plugin API can be very time consuming when widgets need to be positioned manually. OliUI takes away the need to manually position each and every widget and instead allows you to easily create responsive UI windows. 
 
-The layouting of OliUI is reminiscent of HTML and CSS layouts where elements are created in a tree structure and are automatically positioned. With the padding and margin settings you can keep the right balance between UI readability and UX. Percentage element widths make it possible to create dynamic layouts with ease.
-
-Changes to the window are updated in real time whenever possible. But best of all, if you just need to create a GUI for your OpenRCT2 plugin then all you have to worry about is which elements you want in your GUI.
-
 ```javascript
 import Oui from "OliUI.js"
 
@@ -36,6 +32,10 @@ function CreateWindow()
 }
 ```
 ![](https://i.imgur.com/woYhJUV.png)
+
+The layouting of OliUI is reminiscent of HTML and CSS layouts where elements are created in a tree structure and are automatically positioned. With the padding and margin settings you can keep the right balance between UI readability and UX. Percentage element widths make it possible to create dynamic layouts with ease.
+
+Changes to the window are updated in real time whenever possible. But best of all, if you just need to create a GUI for your OpenRCT2 plugin then all you have to worry about is which elements you want in your GUI.
 
 ## Installation
 This project has two different build files. A demo that can be run as an OpenRCT2 plugin at `demobuild/OliUIDemo.js`. And an ES6 module that can be imported into your own project to use OliUI at `build/OliUI.js`.
