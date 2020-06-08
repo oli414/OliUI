@@ -117,6 +117,9 @@ verticalBox.setRemainingHeightFiller(secondElement);
 window.addChild(verticalBox);
 ```
 
+## Documentation
+The entire module is documented using JSDoc comments.
+
 ## Future Plans
 - Window tabs support.
 - Remove ~~and add elements~~ after a window has been opened.
