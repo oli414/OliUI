@@ -1,6 +1,13 @@
 import Widget from "./Widget";
 
+/**
+ * A button input that can be clicked.
+ */
 class Button extends Widget {
+    /**
+     * @param {string} [text] The button text.
+     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+     */
     constructor(text = "", onClick = null) {
         super();
 
@@ -11,10 +18,17 @@ class Button extends Widget {
         this._onClick = onClick;
     }
 
+    /**
+     * Get the button text.
+     */
     getText() {
         return this._text;
     }
 
+    /**
+     * Set the button text.
+     * @param {string} text 
+     */
     setText(text) {
         this._text = text;
         this.requestSync();

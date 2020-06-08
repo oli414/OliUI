@@ -1,6 +1,9 @@
 import VerticalBox from "./VerticalBox";
 import Widget from "./Widgets/Widget";
 
+/**
+ * The group box is a vertical box that a border and an optional label.
+ */
 class GroupBox extends VerticalBox {
     constructor(text = "") {
         super();
@@ -14,10 +17,18 @@ class GroupBox extends VerticalBox {
         this._paddingBottom = 5;
     }
 
+    /**
+     * Get the label text of this groupbox.
+     * @returns {string}
+     */
     getText() {
         return this._text;
     }
 
+    /**
+     * Set the groupbox label text. Set to an empty string to remove the label text.
+     * @param {string} text
+     */
     setText(text) {
         if (Boolean(this._text.length) != Boolean(text.length)) {
             if (text.length == 0) {
@@ -30,6 +41,18 @@ class GroupBox extends VerticalBox {
         }
         this._text = text;
         this.requestSync();
+    }
+
+    /**
+     * Get the reference to the OpenRCT2 Plugin API UI widget.
+     * @returns {Widget} Reference to an OpenRCT2 Plugin API UI widget.
+     */
+    getHandle() {
+        let window = this.getWindow();
+        if (window != null) {
+            return window._handle.findWidget(this._name);
+        }
+        return null;
     }
 
     _getDescription() {
@@ -55,14 +78,6 @@ class GroupBox extends VerticalBox {
             this._applyDescription(handle, desc[0]);
         }
         super._update();
-    }
-
-    getHandle() {
-        let window = this.getWindow();
-        if (window != null) {
-            return window._handle.findWidget(this._name);
-        }
-        return null;
     }
 
     _applyDescription(handle, desc) {

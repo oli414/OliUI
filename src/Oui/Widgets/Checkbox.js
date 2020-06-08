@@ -1,6 +1,13 @@
 import Widget from "./Widget";
 
+/**
+ * A checkbox with text behind it.
+ */
 class Checkbox extends Widget {
+    /**
+     * @param {*} [text] The text displayed behind the checkbox.
+     * @param {import("./Widget").onChangeCallback} [onChange] Callback for when the checkbox is ticked or unticked. The callback's parameter is boolean which is true if the checkbox is checked.
+     */
     constructor(text = "", onChange = null) {
         super();
 
@@ -12,7 +19,19 @@ class Checkbox extends Widget {
         this._isChecked;
     }
 
-    setIsChecked(checked) {
+    /**
+     * Check  if the checkbox is checked.
+     * @returns {boolean} True if the checkbox is checked.
+     */
+    isChecked() {
+        return this._isChecked;
+    }
+
+    /**
+     * Set the state of the checkbox to check or unchecked.
+     * @param {boolean} checked True if the checkbox should be checked.
+     */
+    setChecked(checked) {
         this._isChecked = checked;
         this.requestSync();
     }

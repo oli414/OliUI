@@ -6,6 +6,20 @@ function NumberGen() {
     return numberCount - 1;
 }
 
+/**
+ * This callback is called when a widget is click.
+ * @callback onClickCallback
+ */
+
+/**
+ * This callback is called when the value on an input widget has changed.
+ * @callback onChangeCallback
+ * @param {*} value The new value of the input widget.
+ */
+
+/**
+ * The widget base class that wraps around the OpenRCT2 Plugin API UI widgets, and is mostly used for input widgets and labels.
+ */
 class Widget extends Element {
     constructor() {
         super();
@@ -13,6 +27,18 @@ class Widget extends Element {
         this.setMargins(2, 4, 2, 2);
         this._type = "none";
         this._name = NumberGen();
+    }
+
+    /**
+     * Get the reference to the OpenRCT2 Plugin API UI widget.
+     * @returns {Widget} Reference to an OpenRCT2 Plugin API UI widget.
+     */
+    getHandle() {
+        let window = this.getWindow();
+        if (window != null) {
+            return window._handle.findWidget(this._name);
+        }
+        return null;
     }
 
     _getDescription() {
@@ -34,14 +60,6 @@ class Widget extends Element {
             this._applyDescription(handle, desc);
         }
         this._requireSync = false;
-    }
-
-    getHandle() {
-        let window = this.getWindow();
-        if (window != null) {
-            return window._handle.findWidget(this._name);
-        }
-        return null;
     }
 
     _applyDescription(handle, desc) {

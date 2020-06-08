@@ -8,6 +8,9 @@ import Dropdown from "./Widgets/Dropdown";
 import GroupBox from "./GroupBox";
 import Spinner from "./Widgets/Spinner";
 
+/**
+ * The namespace for OliUI.
+ */
 const Oui = {
     Window: Window,
     VerticalBox: VerticalBox,

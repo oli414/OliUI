@@ -13,7 +13,7 @@ function main() {
         myWindow.setWidth(300);
 
         {
-            let groupBox = new Oui.GroupBox();
+            let groupBox = new Oui.GroupBox("Group Box");
             myWindow.addChild(groupBox);
 
             {
@@ -23,8 +23,7 @@ function main() {
 
 
             {
-                let button = new Oui.Widgets.Button("Label", () => {
-                    console.log("On click")
+                let button = new Oui.Widgets.Button("Click Me", () => {
                     if (groupBox.getText() == "")
                         groupBox.setText("Group Box");
                     else

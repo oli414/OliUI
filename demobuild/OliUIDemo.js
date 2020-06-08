@@ -13,6 +13,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
+    /**
+     * The element class is the base class for all UI elements.
+     */
+
     var Element = function () {
         function Element() {
             _classCallCheck(this, Element);
@@ -36,6 +40,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this._requireSync = false;
         }
 
+        /**
+         * Get the width of this element in pixels. For elements with a relative width the calculated width based on the element's parent is used.
+         * @returns {number} The calculated width in pixels.
+         */
+
+
         _createClass(Element, [{
             key: "getPixelWidth",
             value: function getPixelWidth() {
@@ -53,13 +63,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return this._width;
                 }
             }
+
+            /**
+             * Set the element's width in pixels.
+             * @param {number} width The new width in pixels. 
+             */
+
         }, {
             key: "setWidth",
-            value: function setWidth(pixels) {
-                this._width = pixels;
+            value: function setWidth(width) {
+                this._width = width;
                 this._hasRelativeWidth = false;
                 this.onDimensionsChanged();
             }
+
+            /**
+             * Get the height of this element in pixels. For elements with a relative height the calculated height based on the element's parent is used.
+             * @returns {number} The calculated height in pixels.
+             */
+
         }, {
             key: "getPixelHeight",
             value: function getPixelHeight() {
@@ -77,13 +99,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return this._height;
                 }
             }
+
+            /**
+             * Set the element's height in pixels.
+             * @param {number} height The new height in pixels. 
+             */
+
         }, {
             key: "setHeight",
-            value: function setHeight(pixels) {
-                this._height = pixels;
+            value: function setHeight(height) {
+                this._height = height;
                 this._hasRelativeHeight = false;
                 this.onDimensionsChanged();
             }
+
+            /**
+             * Get the relative width as a percentage. 
+             * If the element does not have a relative width the relative width is calculated using the real width of the parent.
+             * @returns The width as a percentage relative to the parent.
+             */
+
         }, {
             key: "getRelativeWidth",
             value: function getRelativeWidth() {
@@ -96,6 +131,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     throw new Error("The relative width could not be calculated since this element does not have a parent");
                 }
             }
+
+            /**
+             * Set the relative width as a percentage.
+             * @param {number} percentage The width as a percentage.
+             */
+
         }, {
             key: "setRelativeWidth",
             value: function setRelativeWidth(percentage) {
@@ -103,6 +144,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this._hasRelativeWidth = true;
                 this.onDimensionsChanged();
             }
+
+            /**
+             * Get the relative height as a percentage. 
+             * If the element does not have a relative height the relative height is calculated using the real height of the parent.
+             * @returns The height as a percentage relative to the parent.
+             */
+
         }, {
             key: "getRelativeHeight",
             value: function getRelativeHeight() {
@@ -115,6 +163,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     throw new Error("The relative height could not be calculated since this element does not have a parent");
                 }
             }
+
+            /**
+             * Set the relative height as a percentage.
+             * @param {number} percentage The height as a percentage.
+             */
+
         }, {
             key: "setRelativeHeight",
             value: function setRelativeHeight(percentage) {
@@ -122,6 +176,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this._hasRelativeHeight = true;
                 this.onDimensionsChanged();
             }
+
+            /**
+             * @typedef {Object} Margins The spacing outside of the element.
+             * @property {number} top       - The margin at the top of the element.
+             * @property {number} bottom    - The margin at the bottom of the element.
+             * @property {number} left      - The left side margin of the element.
+             * @property {number} right     - The right side margin of the element.
+             */
+
+            /**
+             * Get the margins (spacing outside of the element) on this element.
+             * @returns {Margins} The margins for each side of the element.
+             */
+
         }, {
             key: "getMargins",
             value: function getMargins() {
@@ -132,6 +200,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     right: this._marginRight
                 };
             }
+
+            /**
+             * Set the margins (spacing outside of the element).
+             * @param {*} top The margin at the top of the element.
+             * @param {*} bottom The margin at the bottom of the element.
+             * @param {*} left The left side margin of the element.
+             * @param {*} right The right side margin of the element.
+             */
+
         }, {
             key: "setMargins",
             value: function setMargins(top, bottom, left, right) {
@@ -140,12 +217,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this._marginLeft = left;
                 this._marginRight = right;
             }
+
+            /**
+             * Get the reference to the window at the root of the window tree.
+             * @returns {Window|null} Reference to the window. Can be null if the element or its parents aren't part of a window.
+             */
+
         }, {
             key: "getWindow",
             value: function getWindow() {
                 if (this._parent == null) return null;
                 return this._parent.getWindow();
             }
+
+            /**
+             * Request a synchronization with the real widgets. 
+             * Values on this element and its children will be applied to the OpenRCT2 Plugin API UI widgets. 
+             * The synchronization is performed at the next window update.
+             */
+
         }, {
             key: "requestSync",
             value: function requestSync() {
@@ -154,6 +244,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this._requireSync = true;
                 }
             }
+
+            /**
+             * Check if this element, or one of its parents has requested a synchronization update.
+             * @returns {boolean} True if this element, or one of its parents has requested a synchronization update.
+             */
+
         }, {
             key: "requiresSync",
             value: function requiresSync() {
@@ -162,6 +258,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
                 return this._requireSync;
             }
+
+            /**
+             * Update the dimensions of this element recursively and request for the OpenRCT2 Plugin API UI widgets to be updated.
+             */
+
         }, {
             key: "onDimensionsChanged",
             value: function onDimensionsChanged() {
@@ -197,6 +298,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Element;
     }();
 
+    /**
+     * The box class is the base class for UI elements that is able to hold children.
+     */
+
+
     var Box = function (_Element) {
         _inherits(Box, _Element);
 
@@ -215,6 +321,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this;
         }
 
+        /**
+         * Add a child to this box.
+         * @param {Element} child The element to add as a child.
+         */
+
+
         _createClass(Box, [{
             key: "addChild",
             value: function addChild(child) {
@@ -223,19 +335,45 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 this._updateChildDimensions();
             }
+
+            /**
+             * Get the inner width of this box in pixels. The inner width is calculated by taking the width in pixels minus the paddings.
+             * @returns {number} The inner width in pixels.
+             */
+
         }, {
             key: "getContentWidth",
             value: function getContentWidth() {
                 return this.getPixelWidth() - this._paddingLeft - this._paddingRight;
             }
+
+            /**
+             * Get the inner height of this box in pixels. The inner height is calculated by taking the height in pixels minus the paddings.
+             * @returns {number} The inner width in pixels.
+             */
+
         }, {
             key: "getContentHeight",
             value: function getContentHeight() {
                 return this.getPixelHeight() - this._paddingTop - this._paddingBottom;
             }
+
+            /**
+             * @typedef {Object} Padding The spacing inside of the element.
+             * @property {number} top       - The padding at the top of the element.
+             * @property {number} bottom    - The padding at the bottom of the element.
+             * @property {number} left      - The left side padding of the element.
+             * @property {number} right     - The right side padding of the element.
+             */
+
+            /**
+             * Get the padding (spacing inside of the element) on this element.
+             * @returns { Padding } The padding for each side of the element.
+             */
+
         }, {
-            key: "getMargins",
-            value: function getMargins() {
+            key: "getPadding",
+            value: function getPadding() {
                 return {
                     top: this._paddingTop,
                     bottom: this._paddingBottom,
@@ -243,6 +381,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     right: this._paddingRight
                 };
             }
+
+            /**
+             * Set the padding (spacing inside of the element).
+             * @param {*} top The margin at the top of the element.
+             * @param {*} bottom The margin at the bottom of the element.
+             * @param {*} left The left side margin of the element.
+             * @param {*} right The right side margin of the element.
+             */
+
         }, {
             key: "setPadding",
             value: function setPadding(top, bottom, left, right) {
@@ -263,6 +410,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
                 _get(Box.prototype.__proto__ || Object.getPrototypeOf(Box.prototype), "onDimensionsChanged", this).call(this);
             }
+
+            /**
+             * Calculate the total width of all the margins of the children that are used between the child elements.
+             */
+
         }, {
             key: "getTotalChildMarginWidths",
             value: function getTotalChildMarginWidths() {
@@ -275,6 +427,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
                 return width;
             }
+
+            /**
+             * Calculate the total height of all the margins of the children that are used between the child elements.
+             */
+
         }, {
             key: "getTotalChildMarginHeights",
             value: function getTotalChildMarginHeights() {
@@ -319,6 +476,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Box;
     }(Element);
 
+    /**
+     * The vertical box is an element that holds children and positions them vertically in a top to bottom fasion.
+     */
+
+
     var VerticalBox = function (_Box) {
         _inherits(VerticalBox, _Box);
 
@@ -339,6 +501,46 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     child.onDimensionsChanged();
                 }
             }
+
+            /**
+             * Calculate the left over vertical space.
+             * @returns {number} The remaining vertical space in pixels.
+             */
+
+        }, {
+            key: "getRemainingHeight",
+            value: function getRemainingHeight() {
+                var height = 0;
+                for (var i = 0; i < this._children.length; i++) {
+                    var child = this._children[i];
+                    if (!child._isRemainingFiller) height += child.getPixelHeight();
+
+                    if (i < this._children.length - 1) {
+                        height += Math.max(child._marginBottom, this._children[i + 1]._marginTop);
+                    }
+                }
+                return this.getContentHeight() - height;
+            }
+
+            /**
+             * Set a child element to take up the remaining vertical space.
+             * @param {Element} child Reference to an element to fill the remaining vertical space. This element has to be a child of the box. 
+             */
+
+        }, {
+            key: "setRemainingHeightFiller",
+            value: function setRemainingHeightFiller(child) {
+                if (this._children.indexOf(child) < 0) {
+                    throw new Error("The remaining height filler has to be a child of this element.");
+                }
+                if (this._remainingHeightFiller != null) {
+                    this._remainingHeightFiller._isRemainingFiller = false;
+                }
+                this._remainingHeightFiller = child;
+                child._isRemainingFiller = true;
+                this._updateChildDimensions();
+                child.onDimensionsChanged();
+            }
         }, {
             key: "_updateChildDimensions",
             value: function _updateChildDimensions() {
@@ -358,44 +560,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this.setHeight(yPos + this._paddingBottom);
                 }
             }
-        }, {
-            key: "getRemainingHeight",
-            value: function getRemainingHeight() {
-                var height = 0;
-                for (var i = 0; i < this._children.length; i++) {
-                    var child = this._children[i];
-                    if (!child._isRemainingFiller) height += child.getPixelHeight();
-
-                    if (i < this._children.length - 1) {
-                        height += Math.max(child._marginBottom, this._children[i + 1]._marginTop);
-                    }
-                }
-                return this.getContentHeight() - height;
-            }
-        }, {
-            key: "setRemainingHeightFiller",
-            value: function setRemainingHeightFiller(child) {
-                if (this._children.indexOf(child) < 0) {
-                    throw new Error("The remaining height filler has to be a child of this element.");
-                }
-                if (this._remainingHeightFiller != null) {
-                    this._remainingHeightFiller._isRemainingFiller = false;
-                }
-                this._remainingHeightFiller = child;
-                child._isRemainingFiller = true;
-                this._updateChildDimensions();
-                child.onDimensionsChanged();
-            }
         }]);
 
         return VerticalBox;
     }(Box);
 
+    /**
+     * A window that can hold elements.
+     */
+
+
     var Window = function (_VerticalBox) {
         _inherits(Window, _VerticalBox);
 
-        function Window() {
-            var title = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+        /**
+         * @param {string} classification A custom unique "type" identifier to identify the window's classification by. This is used to manage multiple instances of the same kind of windows.
+         * @param {string} [title] The window title that is displayed in the window's top bar.
+         */
+        function Window(classification) {
+            var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
 
             _classCallCheck(this, Window);
 
@@ -409,7 +592,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this3._handle = null;
 
             _this3._title = title;
-            _this3._classification = "park";
+            _this3._classification = classification;
 
             _this3._canResizeHorizontally = false;
             _this3._minWidth = 100;
@@ -420,63 +603,81 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this3;
         }
 
+        /**
+         * Open the window.
+         */
+
+
         _createClass(Window, [{
             key: "open",
             value: function open() {
                 var desc = this._getDescription();
                 this._handle = ui.openWindow(desc);
             }
+
+            /**
+             * Check if the window is open.
+             * @returns {boolean} True if the window is open.
+             */
+
         }, {
             key: "isOpen",
             value: function isOpen() {
                 return this._handle != null;
             }
-        }, {
-            key: "_getDescription",
-            value: function _getDescription() {
-                var _this4 = this;
 
-                var widgets = _get(Window.prototype.__proto__ || Object.getPrototypeOf(Window.prototype), "_getDescription", this).call(this);
+            /**
+             * Enable or disable the window's horizontal resizeability.
+             * @param {boolean} canResizeHorizontally Wether or not the window should be set to be resizeable.
+             * @param {number} [minWidth] The minimum width that the window can resize to. Should be lower or equal to the width of the window.
+             * @param {number} [maxWidth] The maximum width that the window can resize to. Should be higher or equal to the width of the window.
+             */
 
-                return {
-                    classification: this._classification,
-                    width: this._width,
-                    height: this._height,
-                    minWidth: this._minWidth,
-                    maxWidth: this._maxWidth,
-                    minHeight: this._minHeight,
-                    maxHeight: this._maxHeight,
-                    title: this._title,
-                    widgets: widgets,
-                    onUpdate: function onUpdate() {
-                        _this4._update();
-                    }
-                };
-            }
-        }, {
-            key: "getWindow",
-            value: function getWindow() {
-                return this;
-            }
         }, {
             key: "setHorizontalResize",
-            value: function setHorizontalResize(canResizeHorizontally, minWidth, maxWidth) {
+            value: function setHorizontalResize(canResizeHorizontally) {
+                var minWidth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+                var maxWidth = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
                 this._canResizeHorizontally = canResizeHorizontally;
                 if (canResizeHorizontally) {
                     this._minWidth = minWidth;
                     this._maxWidth = maxWidth;
+                    if (minWidth == 0) {
+                        this._minWidth = this._width;
+                    }
+                    if (maxWidth == 0) {
+                        this._minWidth = this._width;
+                    }
                 } else {
                     this._minWidth = this._width;
                     this._maxWidth = this._width;
                 }
             }
+
+            /**
+             * Enable or disable the window's vertical resizeability.
+             * @param {boolean} canResizeHorizontally Wether or not the window should be set to be resizeable.
+             * @param {number} [minHeight] The minimum height that the window can resize to. Should be lower or equal to the height of the window.
+             * @param {number} [maxHeight] The maximum height that the window can resize to. Should be higher or equal to the height of the window.
+             */
+
         }, {
             key: "setVerticalResize",
-            value: function setVerticalResize(canResizeVertically, minHeight, maxHeight) {
+            value: function setVerticalResize(canResizeVertically) {
+                var minHeight = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+                var maxHeight = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
                 this._canResizeVertically = canResizeVertically;
                 if (canResizeVertically) {
                     this._minHeight = minHeight;
                     this._maxHeight = maxHeight;
+                    if (minHeight == 0) {
+                        this._minHeight = this._height;
+                    }
+                    if (maxHeight == 0) {
+                        this._maxHeight = this._height;
+                    }
                 } else {
                     this._minHeight = this._height;
                     this._maxHeight = this._height;
@@ -526,6 +727,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this._paddingRight = right;
             }
         }, {
+            key: "getWindow",
+            value: function getWindow() {
+                return this;
+            }
+        }, {
+            key: "_getDescription",
+            value: function _getDescription() {
+                var _this4 = this;
+
+                var widgets = _get(Window.prototype.__proto__ || Object.getPrototypeOf(Window.prototype), "_getDescription", this).call(this);
+
+                return {
+                    classification: this._classification,
+                    width: this._width,
+                    height: this._height,
+                    minWidth: this._minWidth,
+                    maxWidth: this._maxWidth,
+                    minHeight: this._minHeight,
+                    maxHeight: this._maxHeight,
+                    title: this._title,
+                    widgets: widgets,
+                    onUpdate: function onUpdate() {
+                        _this4._update();
+                    }
+                };
+            }
+        }, {
             key: "_update",
             value: function _update() {
                 if (this._handle.width != this._width || this._handle.height != this._height) {
@@ -546,6 +774,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return numberCount - 1;
     }
 
+    /**
+     * This callback is called when a widget is click.
+     * @callback onClickCallback
+     */
+
+    /**
+     * This callback is called when the value on an input widget has changed.
+     * @callback onChangeCallback
+     * @param {*} value The new value of the input widget.
+     */
+
+    /**
+     * The widget base class that wraps around the OpenRCT2 Plugin API UI widgets, and is mostly used for input widgets and labels.
+     */
+
     var Widget = function (_Element2) {
         _inherits(Widget, _Element2);
 
@@ -560,7 +803,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this5;
         }
 
+        /**
+         * Get the reference to the OpenRCT2 Plugin API UI widget.
+         * @returns {Widget} Reference to an OpenRCT2 Plugin API UI widget.
+         */
+
+
         _createClass(Widget, [{
+            key: "getHandle",
+            value: function getHandle() {
+                var window = this.getWindow();
+                if (window != null) {
+                    return window._handle.findWidget(this._name);
+                }
+                return null;
+            }
+        }, {
             key: "_getDescription",
             value: function _getDescription() {
                 var calcPos = this._getWindowPixelPosition();
@@ -584,15 +842,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this._requireSync = false;
             }
         }, {
-            key: "getHandle",
-            value: function getHandle() {
-                var window = this.getWindow();
-                if (window != null) {
-                    return window._handle.findWidget(this._name);
-                }
-                return null;
-            }
-        }, {
             key: "_applyDescription",
             value: function _applyDescription(handle, desc) {
                 handle.x = desc.x;
@@ -607,9 +856,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     Widget.NumberGen = NumberGen;
 
+    /**
+     * A text label.
+     */
+
     var Label = function (_Widget) {
         _inherits(Label, _Widget);
 
+        /**
+         * @param {string} text The label text.
+         */
         function Label() {
             var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
 
@@ -624,11 +880,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this6;
         }
 
+        /**
+         * Get the label text.
+         */
+
+
         _createClass(Label, [{
             key: "getText",
             value: function getText() {
                 return this._text;
             }
+
+            /**
+             * Set the label text.
+             * @param {string} text 
+             */
+
         }, {
             key: "setText",
             value: function setText(text) {
@@ -653,9 +920,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Label;
     }(Widget);
 
+    /**
+     * A button input that can be clicked.
+     */
+
+
     var Button = function (_Widget2) {
         _inherits(Button, _Widget2);
 
+        /**
+         * @param {string} [text] The button text.
+         * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+         */
         function Button() {
             var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
             var onClick = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -672,11 +948,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this7;
         }
 
+        /**
+         * Get the button text.
+         */
+
+
         _createClass(Button, [{
             key: "getText",
             value: function getText() {
                 return this._text;
             }
+
+            /**
+             * Set the button text.
+             * @param {string} text 
+             */
+
         }, {
             key: "setText",
             value: function setText(text) {
@@ -706,9 +993,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Button;
     }(Widget);
 
+    /**
+     * A checkbox with text behind it.
+     */
+
+
     var Checkbox = function (_Widget3) {
         _inherits(Checkbox, _Widget3);
 
+        /**
+         * @param {*} [text] The text displayed behind the checkbox.
+         * @param {import("./Widget").onChangeCallback} [onChange] Callback for when the checkbox is ticked or unticked. The callback's parameter is boolean which is true if the checkbox is checked.
+         */
         function Checkbox() {
             var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
             var onChange = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -726,9 +1022,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this9;
         }
 
+        /**
+         * Check  if the checkbox is checked.
+         * @returns {boolean} True if the checkbox is checked.
+         */
+
+
         _createClass(Checkbox, [{
-            key: "setIsChecked",
-            value: function setIsChecked(checked) {
+            key: "isChecked",
+            value: function isChecked() {
+                return this._isChecked;
+            }
+
+            /**
+             * Set the state of the checkbox to check or unchecked.
+             * @param {boolean} checked True if the checkbox should be checked.
+             */
+
+        }, {
+            key: "setChecked",
+            value: function setChecked(checked) {
                 this._isChecked = checked;
                 this.requestSync();
             }
@@ -757,6 +1070,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Checkbox;
     }(Widget);
 
+    /**
+     * The horizontal box is an element that holds children and positions them horizontally in a left to right fasion.
+     */
+
+
     var HorizontalBox = function (_Box2) {
         _inherits(HorizontalBox, _Box2);
 
@@ -778,6 +1096,46 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     child.onDimensionsChanged();
                 }
             }
+
+            /**
+             * Calculate the left over horizontal space.
+             * @returns {number} The remaining horizontal space in pixels.
+             */
+
+        }, {
+            key: "getRemainingWidth",
+            value: function getRemainingWidth() {
+                var width = 0;
+                for (var i = 0; i < this._children.length; i++) {
+                    var child = this._children[i];
+                    if (!child._isRemainingFiller) width += child.getPixelWidth();
+
+                    if (i < this._children.length - 1) {
+                        width += Math.max(child._marginRight, this._children[i + 1]._marginLeft);
+                    }
+                }
+                return this.getContentWidth() - width;
+            }
+
+            /**
+             * Set a child element to take up the remaining horizontal space.
+             * @param {Element} child Reference to an element to fill the remaining horizontal space. This element has to be a child of the box. 
+             */
+
+        }, {
+            key: "setRemainingWidthFiller",
+            value: function setRemainingWidthFiller(child) {
+                if (this._children.indexOf(child) < 0) {
+                    throw new Error("The remaining width filler has to be a child of this element.");
+                }
+                if (this._remainingWidthFiller != null) {
+                    this._remainingWidthFiller._isRemainingFiller = false;
+                }
+                this._remainingWidthFiller = child;
+                child._isRemainingFiller = true;
+                this._updateChildDimensions();
+                child.onDimensionsChanged();
+            }
         }, {
             key: "_updateChildDimensions",
             value: function _updateChildDimensions() {
@@ -797,42 +1155,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this.setWidth(xPos + this._paddingRight);
                 }
             }
-        }, {
-            key: "getRemainingWidth",
-            value: function getRemainingWidth() {
-                var width = 0;
-                for (var i = 0; i < this._children.length; i++) {
-                    var child = this._children[i];
-                    if (!child._isRemainingFiller) width += child.getPixelWidth();
-
-                    if (i < this._children.length - 1) {
-                        width += Math.max(child._marginRight, this._children[i + 1]._marginLeft);
-                    }
-                }
-                return this.getContentWidth() - width;
-            }
-        }, {
-            key: "setRemainingWidthFiller",
-            value: function setRemainingWidthFiller(child) {
-                if (this._children.indexOf(child) < 0) {
-                    throw new Error("The remaining width filler has to be a child of this element.");
-                }
-                if (this._remainingWidthFiller != null) {
-                    this._remainingWidthFiller._isRemainingFiller = false;
-                }
-                this._remainingWidthFiller = child;
-                child._isRemainingFiller = true;
-                this._updateChildDimensions();
-                child.onDimensionsChanged();
-            }
         }]);
 
         return HorizontalBox;
     }(Box);
 
+    /**
+     * A dropdown input field with a set number of items that the user can choose from.
+     */
+
+
     var Dropdown = function (_Widget4) {
         _inherits(Dropdown, _Widget4);
 
+        /**
+         * @param {string[]} [items] String list with all the items to display in the dropdown.
+         * @param {import("./Widget").onChangeCallback} [onChange] Callback for when a dropdown item is selected. The callback's parameter is the index to the item that was selected.
+         */
         function Dropdown() {
             var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
             var onChange = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -850,11 +1189,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this12;
         }
 
+        /**
+         * Get a copy of the dropdown items list.
+         */
+
+
         _createClass(Dropdown, [{
             key: "getItems",
             value: function getItems() {
                 return this._items.slice(0);
             }
+
+            /**
+             * Set the list of dropdown items.
+             * @param {string[]} items List of all the items to display.
+             */
+
         }, {
             key: "setItems",
             value: function setItems(items) {
@@ -887,6 +1237,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Dropdown;
     }(Widget);
 
+    /**
+     * The group box is a vertical box that a border and an optional label.
+     */
+
+
     var GroupBox = function (_VerticalBox2) {
         _inherits(GroupBox, _VerticalBox2);
 
@@ -904,11 +1259,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this14;
         }
 
+        /**
+         * Get the label text of this groupbox.
+         * @returns {string}
+         */
+
+
         _createClass(GroupBox, [{
             key: "getText",
             value: function getText() {
                 return this._text;
             }
+
+            /**
+             * Set the groupbox label text. Set to an empty string to remove the label text.
+             * @param {string} text
+             */
+
         }, {
             key: "setText",
             value: function setText(text) {
@@ -922,6 +1289,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
                 this._text = text;
                 this.requestSync();
+            }
+
+            /**
+             * Get the reference to the OpenRCT2 Plugin API UI widget.
+             * @returns {Widget} Reference to an OpenRCT2 Plugin API UI widget.
+             */
+
+        }, {
+            key: "getHandle",
+            value: function getHandle() {
+                var window = this.getWindow();
+                if (window != null) {
+                    return window._handle.findWidget(this._name);
+                }
+                return null;
             }
         }, {
             key: "_getDescription",
@@ -951,15 +1333,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 _get(GroupBox.prototype.__proto__ || Object.getPrototypeOf(GroupBox.prototype), "_update", this).call(this);
             }
         }, {
-            key: "getHandle",
-            value: function getHandle() {
-                var window = this.getWindow();
-                if (window != null) {
-                    return window._handle.findWidget(this._name);
-                }
-                return null;
-            }
-        }, {
             key: "_applyDescription",
             value: function _applyDescription(handle, desc) {
                 handle.x = desc.x;
@@ -973,9 +1346,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return GroupBox;
     }(VerticalBox);
 
+    /**
+     * A number input with an increase and decrease button.
+     */
+
+
     var Spinner = function (_Widget5) {
         _inherits(Spinner, _Widget5);
 
+        /**
+         * Construct a spinner widget. The number of decimal places is set to the number of decimals of either the default value, or the step size whichever has more decimal places.
+         * @param {number} [value] The default value of the spinner. 
+         * @param {number} [step] The step size with which the spinner increases and decreases the value.
+         * @param {import("./Widget").onChangeCallback} [onChange] Callback for when the spinner value changes. The callback's parameter is the new spinner value as a number.
+         */
         function Spinner() {
             var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
             var step = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
@@ -995,39 +1379,81 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _this15;
         }
 
+        /**
+         * Get the number of decimal places that the spinner displays.
+         * @return {number}
+         */
+
+
         _createClass(Spinner, [{
             key: "getDecimalPlaces",
             value: function getDecimalPlaces() {
                 return this._decimals;
             }
+
+            /**
+             * Set the number of decimal places that the spinner displays.
+             * @param {*} decimals 
+             */
+
         }, {
             key: "setDecimalPlaces",
             value: function setDecimalPlaces(decimals) {
                 this._decimals = decimals;
                 this.requestSync();
             }
+
+            /**
+             * Get the spinner value
+             * @returns {number}
+             */
+
         }, {
             key: "getValue",
             value: function getValue() {
                 return this._value;
             }
+
+            /**
+             * Set the spinner value.
+             * @param {number} value 
+             */
+
         }, {
             key: "setValue",
             value: function setValue(value) {
                 this._value = value;
                 this.requestSync();
             }
+
+            /**
+             * Get the step size that the spinner value increases and decreases by.
+             * @return {number}
+             */
+
         }, {
             key: "getStep",
             value: function getStep() {
                 return this._step;
             }
+
+            /**
+             * Set the step size that the spinner value increases and decreases by.
+             * @param {number} step 
+             */
+
         }, {
             key: "setStep",
             value: function setStep(step) {
                 this._step = step;
                 this.requestSync();
             }
+
+            /**
+             * Get the amount of decimal places of a value.
+             * @param {number} val 
+             */
+
         }, {
             key: "countDecimals",
             value: function countDecimals(val) {
@@ -1043,11 +1469,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 desc.text = this._value.toFixed(this._decimals);
                 desc.onIncrement = function () {
                     _this16._value += _this16._step;
+                    _this16._value = Number(_this16._value.toFixed(_this16._decimals));
                     if (_this16._onChange) _this16._onChange(_this16._value);
                     _this16.requestSync();
                 };
                 desc.onDecrement = function () {
                     _this16._value -= _this16._step;
+                    _this16._value = Number(_this16._value.toFixed(_this16._decimals));
                     if (_this16._onChange) _this16._onChange(_this16._value);
                     _this16.requestSync();
                 };
@@ -1064,6 +1492,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         return Spinner;
     }(Widget);
+
+    /**
+     * The namespace for OliUI.
+     */
+
 
     var Oui = {
         Window: Window,
@@ -1089,7 +1522,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             myWindow.setWidth(300);
 
             {
-                var groupBox = new Oui.GroupBox();
+                var groupBox = new Oui.GroupBox("Group Box");
                 myWindow.addChild(groupBox);
 
                 {
@@ -1098,8 +1531,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
 
                 {
-                    var button = new Oui.Widgets.Button("Label", function () {
-                        console.log("On click");
+                    var button = new Oui.Widgets.Button("Click Me", function () {
                         if (groupBox.getText() == "") groupBox.setText("Group Box");else groupBox.setText("");
                     });
                     groupBox.addChild(button);

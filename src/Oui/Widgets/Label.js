@@ -1,6 +1,12 @@
 import Widget from "./Widget";
 
+/**
+ * A text label.
+ */
 class Label extends Widget {
+    /**
+     * @param {string} text The label text.
+     */
     constructor(text = "") {
         super();
 
@@ -10,10 +16,17 @@ class Label extends Widget {
         this._height = 10;
     }
 
+    /**
+     * Get the label text.
+     */
     getText() {
         return this._text;
     }
 
+    /**
+     * Set the label text.
+     * @param {string} text 
+     */
     setText(text) {
         this._text = text;
         this.requestSync();

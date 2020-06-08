@@ -1,5 +1,8 @@
 
 
+/**
+ * The element class is the base class for all UI elements.
+ */
 class Element {
     constructor() {
         this._parent = null;
@@ -21,6 +24,10 @@ class Element {
         this._requireSync = false;
     }
 
+    /**
+     * Get the width of this element in pixels. For elements with a relative width the calculated width based on the element's parent is used.
+     * @returns {number} The calculated width in pixels.
+     */
     getPixelWidth() {
         if (this._parent == null) {
             return this._width;
@@ -41,12 +48,20 @@ class Element {
         }
     }
 
-    setWidth(pixels) {
-        this._width = pixels;
+    /**
+     * Set the element's width in pixels.
+     * @param {number} width The new width in pixels. 
+     */
+    setWidth(width) {
+        this._width = width;
         this._hasRelativeWidth = false;
         this.onDimensionsChanged();
     }
 
+    /**
+     * Get the height of this element in pixels. For elements with a relative height the calculated height based on the element's parent is used.
+     * @returns {number} The calculated height in pixels.
+     */
     getPixelHeight() {
         if (this._parent == null) {
             return this._height;
@@ -67,12 +82,21 @@ class Element {
         }
     }
 
-    setHeight(pixels) {
-        this._height = pixels;
+    /**
+     * Set the element's height in pixels.
+     * @param {number} height The new height in pixels. 
+     */
+    setHeight(height) {
+        this._height = height;
         this._hasRelativeHeight = false;
         this.onDimensionsChanged();
     }
 
+    /**
+     * Get the relative width as a percentage. 
+     * If the element does not have a relative width the relative width is calculated using the real width of the parent.
+     * @returns The width as a percentage relative to the parent.
+     */
     getRelativeWidth() {
         if (this._hasRelativeWidth) {
             return this._width;
@@ -85,12 +109,22 @@ class Element {
         }
     }
 
+    /**
+     * Set the relative width as a percentage.
+     * @param {number} percentage The width as a percentage.
+     */
     setRelativeWidth(percentage) {
         this._width = percentage;
         this._hasRelativeWidth = true;
         this.onDimensionsChanged();
     }
 
+
+    /**
+     * Get the relative height as a percentage. 
+     * If the element does not have a relative height the relative height is calculated using the real height of the parent.
+     * @returns The height as a percentage relative to the parent.
+     */
     getRelativeHeight() {
         if (this._hasRelativeHeight) {
             return this._height;
@@ -103,12 +137,28 @@ class Element {
         }
     }
 
+    /**
+     * Set the relative height as a percentage.
+     * @param {number} percentage The height as a percentage.
+     */
     setRelativeHeight(percentage) {
         this._height = percentage;
         this._hasRelativeHeight = true;
         this.onDimensionsChanged();
     }
 
+    /**
+     * @typedef {Object} Margins The spacing outside of the element.
+     * @property {number} top       - The margin at the top of the element.
+     * @property {number} bottom    - The margin at the bottom of the element.
+     * @property {number} left      - The left side margin of the element.
+     * @property {number} right     - The right side margin of the element.
+     */
+
+    /**
+     * Get the margins (spacing outside of the element) on this element.
+     * @returns {Margins} The margins for each side of the element.
+     */
     getMargins() {
         return {
             top: this._marginTop,
@@ -118,6 +168,13 @@ class Element {
         }
     }
 
+    /**
+     * Set the margins (spacing outside of the element).
+     * @param {*} top The margin at the top of the element.
+     * @param {*} bottom The margin at the bottom of the element.
+     * @param {*} left The left side margin of the element.
+     * @param {*} right The right side margin of the element.
+     */
     setMargins(top, bottom, left, right) {
         this._marginTop = top;
         this._marginBottom = bottom;
@@ -125,12 +182,21 @@ class Element {
         this._marginRight = right;
     }
 
+    /**
+     * Get the reference to the window at the root of the window tree.
+     * @returns {Window|null} Reference to the window. Can be null if the element or its parents aren't part of a window.
+     */
     getWindow() {
         if (this._parent == null)
             return null;
         return this._parent.getWindow();
     }
 
+    /**
+     * Request a synchronization with the real widgets. 
+     * Values on this element and its children will be applied to the OpenRCT2 Plugin API UI widgets. 
+     * The synchronization is performed at the next window update.
+     */
     requestSync() {
         let window = this.getWindow()
         if (window != null && window.isOpen()) {
@@ -138,6 +204,10 @@ class Element {
         }
     }
 
+    /**
+     * Check if this element, or one of its parents has requested a synchronization update.
+     * @returns {boolean} True if this element, or one of its parents has requested a synchronization update.
+     */
     requiresSync() {
         if (this._parent != null) {
             return this._requireSync || this._parent.requiresSync();
@@ -145,6 +215,9 @@ class Element {
         return this._requireSync;
     }
 
+    /**
+     * Update the dimensions of this element recursively and request for the OpenRCT2 Plugin API UI widgets to be updated.
+     */
     onDimensionsChanged() {
         if (this._parent != null) {
             this._parent._updateChildDimensions();
