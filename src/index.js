@@ -1,17 +1,14 @@
 // Expose the OpenRCT2 to Visual Studio Code's Intellisense
 /// <reference path="../../../bin/openrct2.d.ts" />
 
-// Importing the OliUI library.
+// Import the OliUI library.
 import Oui from "./Oui/index";
-
-
 
 function main() {
     ui.registerMenuItem("OliUI Demo", function () {
 
         let myWindow = new Oui.Window("My Window");
         myWindow.setWidth(300);
-
         {
             let groupBox = new Oui.GroupBox("Group Box");
             myWindow.addChild(groupBox);

@@ -626,204 +626,6 @@ class Window extends VerticalBox {
     }
 }
 
-let numberCount = 0;
-function NumberGen() {
-    numberCount++;
-    return numberCount - 1;
-}
-
-/**
- * This callback is called when a widget is click.
- * @callback onClickCallback
- */
-
-/**
- * This callback is called when the value on an input widget has changed.
- * @callback onChangeCallback
- * @param {*} value The new value of the input widget.
- */
-
-/**
- * The widget base class that wraps around the OpenRCT2 Plugin API UI widgets, and is mostly used for input widgets and labels.
- * @extends Element
- */
-class Widget extends Element {
-    constructor() {
-        super();
-
-        this.setMargins(2, 4, 2, 2);
-        this._type = "none";
-        this._name = NumberGen();
-    }
-
-    /**
-     * Get the reference to the OpenRCT2 Plugin API UI widget.
-     * @returns {Widget} Reference to an OpenRCT2 Plugin API UI widget.
-     */
-    getHandle() {
-        let window = this.getWindow();
-        if (window != null) {
-            return window._handle.findWidget(this._name);
-        }
-        return null;
-    }
-
-    _getDescription() {
-        let calcPos = this._getWindowPixelPosition();
-        return {
-            type: this._type,
-            name: this._name,
-            x: calcPos.x,
-            y: calcPos.y,
-            width: this.getPixelWidth(),
-            height: this.getPixelHeight()
-        }
-    }
-
-    _update() {
-        if (this.requiresSync()) {
-            let handle = this.getHandle();
-            let desc = this._getDescription();
-            this._applyDescription(handle, desc);
-        }
-        this._requireSync = false;
-    }
-
-    _applyDescription(handle, desc) {
-        handle.x = desc.x;
-        handle.y = desc.y;
-        handle.width = desc.width;
-        handle.height = desc.height;
-    }
-}
-
-Widget.NumberGen = NumberGen;
-
-/**
- * A text label.
- */
-class Label extends Widget {
-    /**
-     * @param {string} text The label text.
-     */
-    constructor(text = "") {
-        super();
-
-        this._type = "label";
-        this._text = text;
-        this._name = this._type + "-" + this._name;
-        this._height = 10;
-    }
-
-    /**
-     * Get the label text.
-     */
-    getText() {
-        return this._text;
-    }
-
-    /**
-     * Set the label text.
-     * @param {string} text 
-     */
-    setText(text) {
-        this._text = text;
-        this.requestSync();
-    }
-
-    _getDescription() {
-        let desc = super._getDescription();
-        desc.text = this._text;
-        return desc;
-    }
-
-    _applyDescription(handle, desc) {
-        super._applyDescription(handle, desc);
-        handle.text = desc.text;
-    }
-}
-
-/**
- * A button input that can be clicked.
- */
-class Button extends Widget {
-    /**
-     * @param {string} [text] The button text.
-     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
-     */
-    constructor(onClick = null) {
-        super();
-
-        this._type = "button";
-        this._name = this._type + "-" + this._name;
-        this._height = 13;
-        this._onClick = onClick;
-    }
-
-    _getDescription() {
-        let desc = super._getDescription();
-        desc.onClick = () => { if (this._onClick) this._onClick(); };
-        return desc;
-    }
-
-    _applyDescription(handle, desc) {
-        super._applyDescription(handle, desc);
-    }
-}
-
-/**
- * A checkbox with text behind it.
- */
-class Checkbox extends Widget {
-    /**
-     * @param {*} [text] The text displayed behind the checkbox.
-     * @param {import("./Widget").onChangeCallback} [onChange] Callback for when the checkbox is ticked or unticked. The callback's parameter is boolean which is true if the checkbox is checked.
-     */
-    constructor(text = "", onChange = null) {
-        super();
-
-        this._type = "checkbox";
-        this._text = text;
-        this._name = this._type + "-" + this._name;
-        this._height = 10;
-        this._onChange = onChange;
-        this._isChecked;
-    }
-
-    /**
-     * Check  if the checkbox is checked.
-     * @returns {boolean} True if the checkbox is checked.
-     */
-    isChecked() {
-        return this._isChecked;
-    }
-
-    /**
-     * Set the state of the checkbox to check or unchecked.
-     * @param {boolean} checked True if the checkbox should be checked.
-     */
-    setChecked(checked) {
-        this._isChecked = checked;
-        this.requestSync();
-    }
-
-    _getDescription() {
-        let desc = super._getDescription();
-        desc.text = this._text;
-        desc.onChange = (checked) => {
-            this._isChecked = checked;
-            if (this._onChange) this._onChange(checked);
-        };
-        desc.isChecked = this._isChecked;
-        return desc;
-    }
-
-    _applyDescription(handle, desc) {
-        super._applyDescription(handle, desc);
-        handle.text = desc.text;
-    }
-}
-
 /**
  * The horizontal box is an element that holds children and positions them horizontally in a left to right fasion.
  */
@@ -896,58 +698,78 @@ class HorizontalBox extends Box {
     }
 }
 
+let numberCount = 0;
+function NumberGen() {
+    numberCount++;
+    return numberCount - 1;
+}
+
 /**
- * A dropdown input field with a set number of items that the user can choose from.
+ * This callback is called when a widget is click.
+ * @callback onClickCallback
  */
-class Dropdown extends Widget {
-    /**
-     * @param {string[]} [items] String list with all the items to display in the dropdown.
-     * @param {import("./Widget").onChangeCallback} [onChange] Callback for when a dropdown item is selected. The callback's parameter is the index to the item that was selected.
-     */
-    constructor(items = [], onChange = null) {
+
+/**
+ * This callback is called when the value on an input widget has changed.
+ * @callback onChangeCallback
+ * @param {*} value The new value of the input widget.
+ */
+
+/**
+ * The widget base class that wraps around the OpenRCT2 Plugin API UI widgets, and is mostly used for input widgets and labels.
+ * @extends Element
+ */
+class Widget extends Element {
+    constructor() {
         super();
 
-        this._type = "dropdown";
-        this._name = this._type + "-" + this._name;
-        this._height = 13;
-        this._onChange = onChange;
-        this._items = items.slice(0);
-        this._selectedIndex = 0;
+        this.setMargins(2, 4, 2, 2);
+        this._type = "none";
+        this._name = NumberGen();
     }
 
     /**
-     * Get a copy of the dropdown items list.
+     * Get the reference to the OpenRCT2 Plugin API UI widget.
+     * @returns {Widget} Reference to an OpenRCT2 Plugin API UI widget.
      */
-    getItems() {
-        return this._items.slice(0);
-    }
-
-    /**
-     * Set the list of dropdown items.
-     * @param {string[]} items List of all the items to display.
-     */
-    setItems(items) {
-        this._items = items.slice(0);
-        this.requestSync();
+    getHandle() {
+        let window = this.getWindow();
+        if (window != null) {
+            return window._handle.findWidget(this._name);
+        }
+        return null;
     }
 
     _getDescription() {
-        let desc = super._getDescription();
-        desc.items = this._items;
-        desc.onChange = (i) => {
-            this._selectedIndex = i;
-            if (this._onChange) this._onChange(i);
-        };
-        desc.selectedIndex = this._selectedIndex;
-        return desc;
+        let calcPos = this._getWindowPixelPosition();
+        return {
+            type: this._type,
+            name: this._name,
+            x: calcPos.x,
+            y: calcPos.y,
+            width: this.getPixelWidth(),
+            height: this.getPixelHeight()
+        }
+    }
+
+    _update() {
+        if (this.requiresSync()) {
+            let handle = this.getHandle();
+            let desc = this._getDescription();
+            this._applyDescription(handle, desc);
+        }
+        this._requireSync = false;
     }
 
     _applyDescription(handle, desc) {
-        super._applyDescription(handle, desc);
-        handle.items = desc.items;
-        desc.selectedIndex = desc.selectedIndex;
+        handle.x = desc.x;
+        handle.y = desc.y;
+        handle.width = desc.width;
+        handle.height = desc.height;
     }
 }
+
+Widget.NumberGen = NumberGen;
 
 /**
  * The group box is a vertical box that a border and an optional label.
@@ -1034,6 +856,274 @@ class GroupBox extends VerticalBox {
         handle.width = desc.width;
         handle.height = desc.height;
         handle.text = desc.text;
+    }
+}
+
+/**
+ * A button input that can be clicked.
+ */
+class Button extends Widget {
+    /**
+     * @param {string} [text] The button text.
+     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+     */
+    constructor(onClick = null) {
+        super();
+
+        this._type = "button";
+        this._name = this._type + "-" + this._name;
+        this._height = 13;
+        this._onClick = onClick;
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.onClick = () => { if (this._onClick) this._onClick(); };
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+    }
+}
+
+var BaseClasses = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    Element: Element,
+    Box: Box,
+    Widget: Widget,
+    Button: Button
+});
+
+/**
+ * A text label.
+ */
+class Label extends Widget {
+    /**
+     * @param {string} text The label text.
+     */
+    constructor(text = "") {
+        super();
+
+        this._type = "label";
+        this._text = text;
+        this._name = this._type + "-" + this._name;
+        this._height = 10;
+    }
+
+    /**
+     * Get the label text.
+     */
+    getText() {
+        return this._text;
+    }
+
+    /**
+     * Set the label text.
+     * @param {string} text 
+     */
+    setText(text) {
+        this._text = text;
+        this.requestSync();
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.text = this._text;
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+        handle.text = desc.text;
+    }
+}
+
+/**
+ * A button input that can be clicked that has a text label.
+ */
+class TextButton extends Button {
+    /**
+     * @param {string} [text] The button text.
+     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+     */
+    constructor(text = "", onClick = null) {
+        super(onClick);
+        this._text = text;
+    }
+
+    /**
+     * Get the button text.
+     */
+    getText() {
+        return this._text;
+    }
+
+    /**
+     * Set the button text.
+     * @param {string} text 
+     */
+    setText(text) {
+        this._text = text;
+        this.requestSync();
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.text = this._text;
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+        handle.text = desc.text;
+    }
+}
+
+/**
+ * An image button input that can be clicked.
+ */
+class ImageButton extends Button {
+    /**
+     * @param {number} [image] The image index to display.
+     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+     */
+    constructor(image = 0, onClick = null) {
+        super(onClick);
+        this._image = image;
+    }
+
+    /**
+     * Get the button image index.
+     */
+    getImage() {
+        return this._image;
+    }
+
+    /**
+     * Set the button image index.
+     * @param {number} image The image index to display. 
+     */
+    setImage(image) {
+        this._image = image;
+        this.requestSync();
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.image = this.image;
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+        handle.image = desc.image;
+    }
+}
+
+/**
+ * A checkbox with text behind it.
+ */
+class Checkbox extends Widget {
+    /**
+     * @param {*} [text] The text displayed behind the checkbox.
+     * @param {import("./Widget").onChangeCallback} [onChange] Callback for when the checkbox is ticked or unticked. The callback's parameter is boolean which is true if the checkbox is checked.
+     */
+    constructor(text = "", onChange = null) {
+        super();
+
+        this._type = "checkbox";
+        this._text = text;
+        this._name = this._type + "-" + this._name;
+        this._height = 10;
+        this._onChange = onChange;
+        this._isChecked;
+    }
+
+    /**
+     * Check  if the checkbox is checked.
+     * @returns {boolean} True if the checkbox is checked.
+     */
+    isChecked() {
+        return this._isChecked;
+    }
+
+    /**
+     * Set the state of the checkbox to check or unchecked.
+     * @param {boolean} checked True if the checkbox should be checked.
+     */
+    setChecked(checked) {
+        this._isChecked = checked;
+        this.requestSync();
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.text = this._text;
+        desc.onChange = (checked) => {
+            this._isChecked = checked;
+            if (this._onChange) this._onChange(checked);
+        };
+        desc.isChecked = this._isChecked;
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+        handle.text = desc.text;
+    }
+}
+
+/**
+ * A dropdown input field with a set number of items that the user can choose from.
+ */
+class Dropdown extends Widget {
+    /**
+     * @param {string[]} [items] String list with all the items to display in the dropdown.
+     * @param {import("./Widget").onChangeCallback} [onChange] Callback for when a dropdown item is selected. The callback's parameter is the index to the item that was selected.
+     */
+    constructor(items = [], onChange = null) {
+        super();
+
+        this._type = "dropdown";
+        this._name = this._type + "-" + this._name;
+        this._height = 13;
+        this._onChange = onChange;
+        this._items = items.slice(0);
+        this._selectedIndex = 0;
+    }
+
+    /**
+     * Get a copy of the dropdown items list.
+     */
+    getItems() {
+        return this._items.slice(0);
+    }
+
+    /**
+     * Set the list of dropdown items.
+     * @param {string[]} items List of all the items to display.
+     */
+    setItems(items) {
+        this._items = items.slice(0);
+        this.requestSync();
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.items = this._items;
+        desc.onChange = (i) => {
+            this._selectedIndex = i;
+            if (this._onChange) this._onChange(i);
+        };
+        desc.selectedIndex = this._selectedIndex;
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+        handle.items = desc.items;
+        desc.selectedIndex = desc.selectedIndex;
     }
 }
 
@@ -1145,115 +1235,25 @@ class Spinner extends Widget {
     }
 }
 
-/**
- * A button input that can be clicked that has a text label.
- */
-class TextButton extends Button {
-    /**
-     * @param {string} [text] The button text.
-     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
-     */
-    constructor(text = "", onClick = null) {
-        super(onClick);
-        this._text = text;
-    }
+var index = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    Label: Label,
+    TextButton: TextButton,
+    ImageButton: ImageButton,
+    Checkbox: Checkbox,
+    Dropdown: Dropdown,
+    Spinner: Spinner,
+    Button: Button
+});
 
-    /**
-     * Get the button text.
-     */
-    getText() {
-        return this._text;
-    }
-
-    /**
-     * Set the button text.
-     * @param {string} text 
-     */
-    setText(text) {
-        this._text = text;
-        this.requestSync();
-    }
-
-    _getDescription() {
-        let desc = super._getDescription();
-        desc.text = this._text;
-        return desc;
-    }
-
-    _applyDescription(handle, desc) {
-        super._applyDescription(handle, desc);
-        handle.text = desc.text;
-    }
-}
-
-/**
- * An image button input that can be clicked.
- */
-class ImageButton extends Button {
-    /**
-     * @param {number} [image] The image index to display.
-     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
-     */
-    constructor(image = 0, onClick = null) {
-        super(onClick);
-        this._image = image;
-    }
-
-    /**
-     * Get the button image index.
-     */
-    getImage() {
-        return this._image;
-    }
-
-    /**
-     * Set the button image index.
-     * @param {number} image The image index to display. 
-     */
-    setImage(image) {
-        this._image = image;
-        this.requestSync();
-    }
-
-    _getDescription() {
-        let desc = super._getDescription();
-        desc.image = this.image;
-        return desc;
-    }
-
-    _applyDescription(handle, desc) {
-        super._applyDescription(handle, desc);
-        handle.image = desc.image;
-    }
-}
-
-/**
- * The namespace for OliUI.
- * @namespace
- */
-const Oui = {
+var Oui = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    BaseClasses: BaseClasses,
+    Widgets: index,
     Window: Window,
     VerticalBox: VerticalBox,
     HorizontalBox: HorizontalBox,
-    GroupBox: GroupBox,
-    Widgets: {
-        Label: Label,
-        /**
-         * Alias for TextButton. See Oui.BaseClasses.Button for the button base class.
-         */
-        Button: TextButton,
-        TextButton: TextButton,
-        ImageButton: ImageButton,
-        Checkbox: Checkbox,
-        Dropdown: Dropdown,
-        Spinner: Spinner
-    },
-    BaseClasses: {
-        Element: Element,
-        Box: Box,
-        Widget: Widget,
-        Button: Button
-    }
-};
+    GroupBox: GroupBox
+});
 
 export default Oui;
