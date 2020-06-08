@@ -1,16 +1,14 @@
 # OliUI
-OliUI is an OpenRCT2 plugin module to easily construct and control UI windows.
+OliUI is an OpenRCT2 plugin module to easily construct and control UI windows of any complexity.
 
 ![](https://i.imgur.com/DJxWc2r.png)
 
-## Installation
-This project has two different build files. A demo that can be run as an OpenRCT2 plugin at `demobuild/OliUIDemo.js`. And an ES6 module that can be imported into your own project to use OliUI at `build/OliUI.js`.
+Creating UI windows with the OpenRCT2 plugin API can be very time consuming when widgets need to be positioned manually. OliUI takes away the need to manually position each and every widget and instead allows you to easily create responsive UI windows. 
 
-The demo can be ran by placing the `OliUIDemo.js` file in `OpenRCT2/plugin/`.
+The layouting of OliUI is reminiscent of HTML and CSS layouts where elements are created in a tree structure and are automatically positioned. With the padding and margin settings you can keep the right balance between UI readability and UX. Percentage element widths make it possible to create dynamic layouts with ease.
 
-To use the module simply copy the `OliUI.js` file inside of your project's source directory. Keep in mind that it is an ES6 module and thus you will need a transpiler and module bundler to turn your project into a single ES5 file. You can use the [ES6 boilerplate](https://github.com/oli414/openrct2-plugin-boilerplate). Typescript projects can also import the module.
+Changes to the window are updated in real time whenever possible. But best of all, if you just need to create a GUI for your OpenRCT2 plugin then all you have to worry about is which elements you want in your GUI.
 
-Here's an example on what basic usage of the module would look like:
 ```javascript
 import Oui from "OliUI.js"
 
@@ -36,6 +34,13 @@ function CreateWindow()
     window.open();
 }
 ```
+
+## Installation
+This project has two different build files. A demo that can be run as an OpenRCT2 plugin at `demobuild/OliUIDemo.js`. And an ES6 module that can be imported into your own project to use OliUI at `build/OliUI.js`.
+
+The demo can be ran by placing the `OliUIDemo.js` file in `OpenRCT2/plugin/`.
+
+To use the module simply copy the `OliUI.js` file inside of your project's source directory. Keep in mind that it is an ES6 module and thus you will need a transpiler and module bundler to turn your project into a single ES5 file. You can use the [ES6 boilerplate](https://github.com/oli414/openrct2-plugin-boilerplate). Typescript projects can also import the module.
 
 ## Layout
 The main box element for creating layouts is the VerticalBox. The Window itself derives from the VerticalBox and makes sure that all the children are spaced out vertically. 
