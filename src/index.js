@@ -11,6 +11,7 @@ function main() {
         let myWindow = new Oui.Window("My Window");
         myWindow.setWidth(300);
         myWindow.setHorizontalResize(true, 200, 600);
+        myWindow.setVerticalResize(true, 200, 600);
 
         let groupBox = new Oui.GroupBox("Group Box");
 
@@ -95,6 +96,13 @@ function main() {
             });
             myWindow.addChild(button);
         }
+
+        let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
+        myWindow.addChild(viewportWidget);
+        myWindow.setRemainingHeightFiller(viewportWidget);
+
+        viewportWidget.setView(1000, 1000);
+        //viewportWidget.setRotation(1);
 
         myWindow.open();
     });

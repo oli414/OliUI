@@ -6,6 +6,7 @@ export { default as Checkbox } from "./Checkbox";
 export { default as Dropdown } from "./Dropdown";
 export { default as Spinner } from "./Spinner";
 export { default as ListView } from "./ListView";
+export { default as ViewportWidget } from "./ViewportWidget";
 
 /**
  * Alias for TextButton. Check "Oui.BaseClasses.Button" for the button base class.
