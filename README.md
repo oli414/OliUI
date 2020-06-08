@@ -1,6 +1,4 @@
 # OliUI
-OliUI is still under construction. Only use for testing.
-
 OliUI is an OpenRCT2 plugin module to easily construct and control UI windows.
 
 ![](https://i.imgur.com/DJxWc2r.png)
@@ -120,7 +118,11 @@ window.addChild(verticalBox);
 ```
 
 ## Future Plans
-- Remove and add elements after a window has been opened.
+- Window tabs support.
+- Remove ~~and add elements~~ after a window has been opened.
 - Option to align a Box's child elements in the center, right, top or bottom.
 - Special type of Box in which the child elements can be positioned manually.
-- ListView and ViewPort widgets.
+
+## Known Issues
+- The viewport widget implementation is very limited.
+- Setting the selected cell manually on a listview widget does not function.
