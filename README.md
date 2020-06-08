@@ -1,6 +1,8 @@
 # OliUI
 OliUI is an OpenRCT2 plugin module to easily construct and control UI windows of any complexity.
 
+*This is not an plugin but rather a tool (library/module) for plugin creators to use*
+
 Creating UI windows with the OpenRCT2 plugin API can be very time consuming when widgets need to be positioned manually. OliUI takes away the need to manually position each and every widget and instead allows you to easily create responsive UI windows. 
 
 ```javascript
