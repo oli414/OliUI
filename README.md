@@ -15,7 +15,8 @@ import Oui from "OliUI.js"
 function CreateWindow() 
 {
     const window = new Oui.Window("My Window");
-    window.setWidth(300);
+    window.setWidth(300); 
+    // The height is automatically updated as we add more elements to the window.
     
     const label = new Oui.Widgets.Label("Hello World!");
     window.addChild(label);
@@ -27,10 +28,12 @@ function CreateWindow()
     groupbox.addChild(spinner);
     
     const button = new Oui.Widgets.Button("Click Me!", () => {
-        button.setText("I was clicked!");
+        // Implementing callbacks is a breeze. 
+        this.setText("I was clicked!");
     });
     groupbox.addChild(button);
     
+    // And then all that's left is the grand opening.
     window.open();
 }
 ```
