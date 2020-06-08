@@ -19,6 +19,7 @@ function NumberGen() {
 
 /**
  * The widget base class that wraps around the OpenRCT2 Plugin API UI widgets, and is mostly used for input widgets and labels.
+ * @extends Element
  */
 class Widget extends Element {
     constructor() {

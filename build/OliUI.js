@@ -246,6 +246,7 @@ class Element {
 
 /**
  * The box class is the base class for UI elements that is able to hold children.
+ * @extends Element
  */
 class Box extends Element {
     constructor() {
@@ -644,6 +645,7 @@ function NumberGen() {
 
 /**
  * The widget base class that wraps around the OpenRCT2 Plugin API UI widgets, and is mostly used for input widgets and labels.
+ * @extends Element
  */
 class Widget extends Element {
     constructor() {
@@ -749,42 +751,23 @@ class Button extends Widget {
      * @param {string} [text] The button text.
      * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
      */
-    constructor(text = "", onClick = null) {
+    constructor(onClick = null) {
         super();
 
         this._type = "button";
-        this._text = text;
         this._name = this._type + "-" + this._name;
         this._height = 13;
         this._onClick = onClick;
     }
 
-    /**
-     * Get the button text.
-     */
-    getText() {
-        return this._text;
-    }
-
-    /**
-     * Set the button text.
-     * @param {string} text 
-     */
-    setText(text) {
-        this._text = text;
-        this.requestSync();
-    }
-
     _getDescription() {
         let desc = super._getDescription();
-        desc.text = this._text;
         desc.onClick = () => { if (this._onClick) this._onClick(); };
         return desc;
     }
 
     _applyDescription(handle, desc) {
         super._applyDescription(handle, desc);
-        handle.text = desc.text;
     }
 }
 
@@ -1163,7 +1146,90 @@ class Spinner extends Widget {
 }
 
 /**
+ * A button input that can be clicked that has a text label.
+ */
+class TextButton extends Button {
+    /**
+     * @param {string} [text] The button text.
+     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+     */
+    constructor(text = "", onClick = null) {
+        super(onClick);
+        this._text = text;
+    }
+
+    /**
+     * Get the button text.
+     */
+    getText() {
+        return this._text;
+    }
+
+    /**
+     * Set the button text.
+     * @param {string} text 
+     */
+    setText(text) {
+        this._text = text;
+        this.requestSync();
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.text = this._text;
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+        handle.text = desc.text;
+    }
+}
+
+/**
+ * An image button input that can be clicked.
+ */
+class ImageButton extends Button {
+    /**
+     * @param {number} [image] The image index to display.
+     * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+     */
+    constructor(image = 0, onClick = null) {
+        super(onClick);
+        this._image = image;
+    }
+
+    /**
+     * Get the button image index.
+     */
+    getImage() {
+        return this._image;
+    }
+
+    /**
+     * Set the button image index.
+     * @param {number} image The image index to display. 
+     */
+    setImage(image) {
+        this._image = image;
+        this.requestSync();
+    }
+
+    _getDescription() {
+        let desc = super._getDescription();
+        desc.image = this.image;
+        return desc;
+    }
+
+    _applyDescription(handle, desc) {
+        super._applyDescription(handle, desc);
+        handle.image = desc.image;
+    }
+}
+
+/**
  * The namespace for OliUI.
+ * @namespace
  */
 const Oui = {
     Window: Window,
@@ -1172,10 +1238,21 @@ const Oui = {
     GroupBox: GroupBox,
     Widgets: {
         Label: Label,
-        Button: Button,
+        /**
+         * Alias for TextButton. See Oui.BaseClasses.Button for the button base class.
+         */
+        Button: TextButton,
+        TextButton: TextButton,
+        ImageButton: ImageButton,
         Checkbox: Checkbox,
         Dropdown: Dropdown,
         Spinner: Spinner
+    },
+    BaseClasses: {
+        Element: Element,
+        Box: Box,
+        Widget: Widget,
+        Button: Button
     }
 };
 

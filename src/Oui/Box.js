@@ -2,6 +2,7 @@ import Element from "./Element";
 
 /**
  * The box class is the base class for UI elements that is able to hold children.
+ * @extends Element
  */
 class Box extends Element {
     constructor() {

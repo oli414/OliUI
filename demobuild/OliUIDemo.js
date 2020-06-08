@@ -300,6 +300,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /**
      * The box class is the base class for UI elements that is able to hold children.
+     * @extends Element
      */
 
 
@@ -787,6 +788,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /**
      * The widget base class that wraps around the OpenRCT2 Plugin API UI widgets, and is mostly used for input widgets and labels.
+     * @extends Element
      */
 
     var Widget = function (_Element2) {
@@ -933,50 +935,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
          */
         function Button() {
-            var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-            var onClick = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+            var onClick = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
             _classCallCheck(this, Button);
 
             var _this7 = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
 
             _this7._type = "button";
-            _this7._text = text;
             _this7._name = _this7._type + "-" + _this7._name;
             _this7._height = 13;
             _this7._onClick = onClick;
             return _this7;
         }
 
-        /**
-         * Get the button text.
-         */
-
-
         _createClass(Button, [{
-            key: "getText",
-            value: function getText() {
-                return this._text;
-            }
-
-            /**
-             * Set the button text.
-             * @param {string} text 
-             */
-
-        }, {
-            key: "setText",
-            value: function setText(text) {
-                this._text = text;
-                this.requestSync();
-            }
-        }, {
             key: "_getDescription",
             value: function _getDescription() {
                 var _this8 = this;
 
                 var desc = _get(Button.prototype.__proto__ || Object.getPrototypeOf(Button.prototype), "_getDescription", this).call(this);
-                desc.text = this._text;
                 desc.onClick = function () {
                     if (_this8._onClick) _this8._onClick();
                 };
@@ -986,7 +963,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "_applyDescription",
             value: function _applyDescription(handle, desc) {
                 _get(Button.prototype.__proto__ || Object.getPrototypeOf(Button.prototype), "_applyDescription", this).call(this, handle, desc);
-                handle.text = desc.text;
             }
         }]);
 
@@ -1494,7 +1470,136 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }(Widget);
 
     /**
+     * A button input that can be clicked that has a text label.
+     */
+
+
+    var TextButton = function (_Button) {
+        _inherits(TextButton, _Button);
+
+        /**
+         * @param {string} [text] The button text.
+         * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+         */
+        function TextButton() {
+            var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+            var onClick = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            _classCallCheck(this, TextButton);
+
+            var _this17 = _possibleConstructorReturn(this, (TextButton.__proto__ || Object.getPrototypeOf(TextButton)).call(this, onClick));
+
+            _this17._text = text;
+            return _this17;
+        }
+
+        /**
+         * Get the button text.
+         */
+
+
+        _createClass(TextButton, [{
+            key: "getText",
+            value: function getText() {
+                return this._text;
+            }
+
+            /**
+             * Set the button text.
+             * @param {string} text 
+             */
+
+        }, {
+            key: "setText",
+            value: function setText(text) {
+                this._text = text;
+                this.requestSync();
+            }
+        }, {
+            key: "_getDescription",
+            value: function _getDescription() {
+                var desc = _get(TextButton.prototype.__proto__ || Object.getPrototypeOf(TextButton.prototype), "_getDescription", this).call(this);
+                desc.text = this._text;
+                return desc;
+            }
+        }, {
+            key: "_applyDescription",
+            value: function _applyDescription(handle, desc) {
+                _get(TextButton.prototype.__proto__ || Object.getPrototypeOf(TextButton.prototype), "_applyDescription", this).call(this, handle, desc);
+                handle.text = desc.text;
+            }
+        }]);
+
+        return TextButton;
+    }(Button);
+
+    /**
+     * An image button input that can be clicked.
+     */
+
+
+    var ImageButton = function (_Button2) {
+        _inherits(ImageButton, _Button2);
+
+        /**
+         * @param {number} [image] The image index to display.
+         * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
+         */
+        function ImageButton() {
+            var image = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+            var onClick = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            _classCallCheck(this, ImageButton);
+
+            var _this18 = _possibleConstructorReturn(this, (ImageButton.__proto__ || Object.getPrototypeOf(ImageButton)).call(this, onClick));
+
+            _this18._image = image;
+            return _this18;
+        }
+
+        /**
+         * Get the button image index.
+         */
+
+
+        _createClass(ImageButton, [{
+            key: "getImage",
+            value: function getImage() {
+                return this._image;
+            }
+
+            /**
+             * Set the button image index.
+             * @param {number} image The image index to display. 
+             */
+
+        }, {
+            key: "setImage",
+            value: function setImage(image) {
+                this._image = image;
+                this.requestSync();
+            }
+        }, {
+            key: "_getDescription",
+            value: function _getDescription() {
+                var desc = _get(ImageButton.prototype.__proto__ || Object.getPrototypeOf(ImageButton.prototype), "_getDescription", this).call(this);
+                desc.image = this.image;
+                return desc;
+            }
+        }, {
+            key: "_applyDescription",
+            value: function _applyDescription(handle, desc) {
+                _get(ImageButton.prototype.__proto__ || Object.getPrototypeOf(ImageButton.prototype), "_applyDescription", this).call(this, handle, desc);
+                handle.image = desc.image;
+            }
+        }]);
+
+        return ImageButton;
+    }(Button);
+
+    /**
      * The namespace for OliUI.
+     * @namespace
      */
 
 
@@ -1505,10 +1610,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         GroupBox: GroupBox,
         Widgets: {
             Label: Label,
-            Button: Button,
+            /**
+             * Alias for TextButton. See Oui.BaseClasses.Button for the button base class.
+             */
+            Button: TextButton,
+            TextButton: TextButton,
+            ImageButton: ImageButton,
             Checkbox: Checkbox,
             Dropdown: Dropdown,
             Spinner: Spinner
+        },
+        BaseClasses: {
+            Element: Element,
+            Box: Box,
+            Widget: Widget,
+            Button: Button
         }
     };
 
