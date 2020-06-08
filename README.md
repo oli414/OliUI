@@ -75,6 +75,8 @@ window.addChild(verticalBox);
 ```
 ![](https://i.imgur.com/FjKTQy0.png)
 
+### Absolute and Relative Sizes
+
 On each element the size can be set either absolute or relative. An absolute size specifies the size in pixels while a relative size specifies the size in the percentage. A relative size scales relative to the parent element.
 All elements have a relative width of 100% by default.
 ```javascript
@@ -93,6 +95,8 @@ window.addChild(verticalBox);
 ```
 ![](https://i.imgur.com/UzF2qNj.png)
 
+### Horizontal Layouts
+
 The HorizontalBox can be used when the child elements should be spaced out next to each other in a horizontal fashion.
 ```javascript
 const horizontalBox = new Oui.HorizontalBox();
@@ -108,6 +112,8 @@ horizontalBox.addChild(secondElement);
 window.addChild(horizontalBox);
 ```
 ![](https://i.imgur.com/y46n3EQ.png)
+
+### Left Over Space
 
 Both the VerticalBox and HorizontalBox allow you to set a single child element to fill the remaining space. For the VerticalBox this is the remaining vertical space and for the HorizontalBox this is the remaining horizontal space.
 ```javascript
