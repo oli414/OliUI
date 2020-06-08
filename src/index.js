@@ -4,9 +4,33 @@
 // Import the OliUI library.
 import Oui from "./Oui/index";
 
+function CreateWindow() {
+    const window = new Oui.Window("My Window");
+    window.setWidth(300);
+
+    const verticalBox = new Oui.VerticalBox();
+    verticalBox.setHeight(75);
+
+    const firstElement = new Oui.Widgets.Button("Top Button");
+    firstElement.setHeight(15);
+    verticalBox.addChild(firstElement);
+
+    const secondElement = new Oui.Widgets.Button("Bottom Button");
+    verticalBox.addChild(secondElement);
+
+    verticalBox.setRemainingHeightFiller(secondElement);
+    // secondElement will fill the remaining height.
+
+    window.addChild(verticalBox);
+
+    window.open();
+}
+
 function main() {
     ui.registerMenuItem("OliUI Demo", function () {
 
+        CreateWindow();
+        /*
         let myWindow = new Oui.Window("My Window");
         myWindow.setWidth(300);
         myWindow.setHorizontalResize(true, 200, 600);
@@ -95,7 +119,7 @@ function main() {
             });
             myWindow.addChild(button);
         }
-
+*/
         /*
         let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
         myWindow.addChild(viewportWidget);

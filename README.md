@@ -53,26 +53,27 @@ const verticalBox = new Oui.VerticalBox();
 verticalBox.setPadding(8, 8, 8, 8) 
 // The children will leave an 8 pixel large padding between them and the verticalBox
 
-const firstElement = new Oui.Button("Top Button");
+const firstElement = new Oui.Widgets.Button("Top Button");
 firstElement.setMargins(0, 8, 0, 0);
 verticalBox.addChild(firstElement);
 
 // The margin between firstElement and secondElement will be 8 pixels since 
 // firstElement's bottom margin is larger then secondElement's bottom margin
 
-const secondElement = new Oui.Button("Middle Button");
+const secondElement = new Oui.Widgets.Button("Middle Button");
 secondElement.setMargins(2, 2, 0, 0);
 verticalBox.addChild(secondElement);
 
 // The margin between secondElement and lastElement will be 6 pixels since 
 // lastElement's top margin is larger then secondElement's bottom margin
 
-const lastElement = new Oui.Button("Bottom Button");
+const lastElement = new Oui.Widgets.Button("Bottom Button");
 lastElement.setMargins(6, 0, 0, 0);
 verticalBox.addChild(lastElement);
 
 window.addChild(verticalBox);
 ```
+![](https://i.imgur.com/FjKTQy0.png)
 
 On each element the size can be set either absolute or relative. An absolute size specifies the size in pixels while a relative size specifies the size in the percentage. A relative size scales relative to the parent element.
 All elements have a relative width of 100% by default.
@@ -80,49 +81,52 @@ All elements have a relative width of 100% by default.
 const verticalBox = new Oui.VerticalBox();
 verticalBox.setHeight(400);
 
-const firstElement = new Oui.Button("Top Button");
+const firstElement = new Oui.Widgets.Button("Top Button");
 firstElement.setRelativeHeight(50);
 verticalBox.addChild(firstElement);
 
-const secondElement = new Oui.Button("Bottom Button");
+const secondElement = new Oui.Widgets.Button("Bottom Button");
 secondElement.setRelativeHeight(50);
 verticalBox.addChild(secondElement);
 
 window.addChild(verticalBox);
 ```
+![](https://i.imgur.com/UzF2qNj.png)
 
 The HorizontalBox can be used when the child elements should be spaced out next to each other in a horizontal fashion.
 ```javascript
 const horizontalBox = new Oui.HorizontalBox();
 
-const firstElement = new Oui.Button("Left Button");
+const firstElement = new Oui.Widgets.Button("Left Button");
 firstElement.setRelativeWidth(50);
 horizontalBox.addChild(firstElement);
 
-const secondElement = new Oui.Button("Right Button");
+const secondElement = new Oui.Widgets.Button("Right Button");
 secondElement.setRelativeWidth(50);
 horizontalBox.addChild(secondElement);
 
 window.addChild(horizontalBox);
 ```
+![](https://i.imgur.com/y46n3EQ.png)
 
 Both the VerticalBox and HorizontalBox allow you to set a single child element to fill the remaining space. For the VerticalBox this is the remaining vertical space and for the HorizontalBox this is the remaining horizontal space.
 ```javascript
 const verticalBox = new Oui.VerticalBox();
-verticalBox.setHeight(400);
+verticalBox.setHeight(50);
 
-const firstElement = new Oui.Button("Top Button");
-firstElement.setRelativeHeight(30);
+const firstElement = new Oui.Widgets.Button("Top Button");
+firstElement.setHeight(15);
 verticalBox.addChild(firstElement);
 
-const secondElement = new Oui.Button("Bottom Button");
+const secondElement = new Oui.Widgets.Button("Bottom Button");
 verticalBox.addChild(secondElement);
 
 verticalBox.setRemainingHeightFiller(secondElement);
-// secondElement will fill the remaining 70% of height.
+// secondElement will fill the remaining height.
 
 window.addChild(verticalBox);
 ```
+![](https://i.imgur.com/NstleLH.png)
 
 ## Documentation
 The entire module is documented using JSDoc comments.
