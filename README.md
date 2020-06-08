@@ -3,6 +3,8 @@ OliUI is still under construction. Only use for testing.
 
 OliUI is an OpenRCT2 plugin module to easily construct and control UI windows.
 
+![](https://i.imgur.com/DJxWc2r.png)
+
 ## Installation
 This project has two different build files. A demo that can be run as an OpenRCT2 plugin at `demobuild/OliUIDemo.js`. And an ES6 module that can be imported into your own project to use OliUI at `build/OliUI.js`.
 
