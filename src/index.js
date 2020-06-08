@@ -10,6 +10,7 @@ function main() {
 
         let myWindow = new Oui.Window("My Window");
         myWindow.setWidth(300);
+        myWindow.setHorizontalResize(true, 200, 600);
 
         let groupBox = new Oui.GroupBox("Group Box");
 
@@ -30,8 +31,7 @@ function main() {
 
             {
                 let button = new Oui.Widgets.Button("Click Me", () => {
-                    //button.setIsPressed(!button.isPressed());
-                    groupBox.setIsDisabled(true);
+                    button.setIsPressed(!button.isPressed());
                 });
                 groupBox.addChild(button);
             }
@@ -50,6 +50,50 @@ function main() {
                 let spinner = new Oui.Widgets.Spinner(0, 0.1, (val) => { console.log("On change " + val) });
                 groupBox.addChild(spinner);
             }
+        }
+
+        let listView = new Oui.Widgets.ListView();
+
+        let columns = [
+            new Oui.Widgets.ListView.ListViewColumn("Name"),
+            new Oui.Widgets.ListView.ListViewColumn("Age"),
+            new Oui.Widgets.ListView.ListViewColumn("Money")
+        ]
+
+        columns[0].setMaxWidth(100);
+        columns[0].setCanSort(true, "descending");
+
+        listView.setColumns(columns);
+        listView.addItem([
+            "Henk",
+            "0",
+            "0.1"
+        ]);
+        listView.addItem([
+            "Xavier",
+            "10",
+            "10"
+        ]);
+        listView.addItem([
+            "Bas",
+            "30",
+            "100"
+        ]);
+        //listView.setIsStriped(true);
+        listView.setCanSelect(true);
+        listView.setSelectedCell(1, 1);
+        myWindow.addChild(listView);
+
+
+        {
+            let button = new Oui.Widgets.Button("Add Item", () => {
+                listView.addItem([
+                    "Bas",
+                    "30",
+                    "100"
+                ]);
+            });
+            myWindow.addChild(button);
         }
 
         myWindow.open();

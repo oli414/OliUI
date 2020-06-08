@@ -29,6 +29,27 @@ class Box extends Element {
     }
 
     /**
+     * Get a list with references to all the children in this box.
+     */
+    getChildren() {
+        return this._children;
+    }
+
+    /**
+     * Remove a child from this box.
+     * @param {Element} child The child to remove.
+     */
+    removeChild(child) {
+        let index = this._children.indexOf(child);
+        if (index < 0) {
+            throw new Error("The specified element is not a child of this box.");
+        }
+        this._children[index]._parent = null;
+        this._children.splice(index, 1);
+        this.requestSync();
+    }
+
+    /**
      * Get the inner width of this box in pixels. The inner width is calculated by taking the width in pixels minus the paddings.
      * @returns {number} The inner width in pixels.
      */

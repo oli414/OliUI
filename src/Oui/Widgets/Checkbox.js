@@ -20,6 +20,14 @@ class Checkbox extends Widget {
     }
 
     /**
+     * Set the on change callback.
+     * @param {import("./Widget").onChangeCallback} onChange 
+     */
+    setOnChange(onChange) {
+        this._onChange = onChange;
+    }
+
+    /**
      * Check  if the checkbox is checked.
      * @returns {boolean} True if the checkbox is checked.
      */

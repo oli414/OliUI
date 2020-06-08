@@ -19,6 +19,14 @@ class Button extends Widget {
     }
 
     /**
+     * Set the on click callback.
+     * @param {import("./Widget").onClickCallback} onClick 
+     */
+    setOnClick(onClick) {
+        this._onClick = onClick;
+    }
+
+    /**
      * wether or not the button is stuck in a pressed down position (for toggleable buttons).
      * @returns {boolean}
      */

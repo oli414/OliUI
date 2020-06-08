@@ -27,7 +27,7 @@ class Element {
     }
 
     /**
-     * Get wether or not this element is disabled (greyed out).
+     * Get wether or not this element or one of its parents (recursive) is disabled (greyed out).
      * @returns {boolean}
      */
     isDisabled() {
@@ -38,7 +38,7 @@ class Element {
     }
 
     /**
-     * Set wether or not this element is disabled (greyed out).
+     * Set wether or not this element and its children are disabled (greyed out).
      * @param {boolean} isDisabled 
      */
     setIsDisabled(isDisabled) {
@@ -235,6 +235,16 @@ class Element {
             return this._requireSync || this._parent.requiresSync();
         }
         return this._requireSync;
+    }
+
+    /**
+     * Request a full recreation of the entire window. This is sometimes necessary in order to dynamically add and remove widgets and/or list view items.
+     */
+    requestRefresh() {
+        let window = this.getWindow();
+        if (window != null) {
+            window.requestRefresh();
+        }
     }
 
     /**

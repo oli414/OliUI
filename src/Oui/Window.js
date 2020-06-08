@@ -26,6 +26,9 @@ class Window extends VerticalBox {
         this._canResizeVertically = false;
         this._minHeight = 100;
         this._maxHeight = 100;
+
+        this._requestedRefresh = false;
+        this._openAtPosition = false;
     }
 
     /**
@@ -42,6 +45,13 @@ class Window extends VerticalBox {
      */
     isOpen() {
         return this._handle != null;
+    }
+
+    requestRefresh() {
+        // Refreshes are only needed when the window is open.
+        if (this.isOpen()) {
+            this._requestedRefresh = true;
+        }
     }
 
     /**
@@ -138,7 +148,7 @@ class Window extends VerticalBox {
     _getDescription() {
         let widgets = super._getDescription();
 
-        return {
+        let desc = {
             classification: this._classification,
             width: this._width,
             height: this._height,
@@ -151,7 +161,13 @@ class Window extends VerticalBox {
             onUpdate: () => {
                 this._update();
             }
+        };
+        if (this._openAtPosition) {
+            desc.x = this._x;
+            desc.y = this._y;
         }
+
+        return desc;
     }
 
     _update() {
@@ -161,6 +177,27 @@ class Window extends VerticalBox {
         }
         super._update();
         this._requireSync = false;
+
+        if (this._requestedRefresh) {
+            this._refresh();
+            this._requestedRefresh
+        }
+    }
+
+    _getWindowPixelPosition() {
+        return { x: 0, y: 0 };
+    }
+
+    _refresh() {
+        this._x = this._handle.x;
+        this._y = this._handle.y;
+
+        this._handle.close();
+        this._openAtPosition = true;
+        this.open();
+        this._openAtPosition = false;
+
+        this._requestedRefresh = false;
     }
 }
 

@@ -69,7 +69,6 @@ class Widget extends Element {
         handle.y = desc.y;
         handle.width = desc.width;
         handle.height = desc.height;
-        console.log("set " + desc.isDisabled);
         handle.isDisabled = desc.isDisabled;
     }
 }

@@ -20,6 +20,14 @@ class Dropdown extends Widget {
     }
 
     /**
+     * Set the on change callback.
+     * @param {import("./Widget").onChangeCallback} onChange 
+     */
+    setOnChange(onChange) {
+        this._onChange = onChange;
+    }
+
+    /**
      * Get a copy of the dropdown items list.
      */
     getItems() {

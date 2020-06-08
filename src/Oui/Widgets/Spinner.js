@@ -23,6 +23,14 @@ class Spinner extends Widget {
     }
 
     /**
+     * Set the on change callback.
+     * @param {import("./Widget").onChangeCallback} onChange 
+     */
+    setOnChange(onChange) {
+        this._onChange = onChange;
+    }
+
+    /**
      * Get the number of decimal places that the spinner displays.
      * @return {number}
      */
