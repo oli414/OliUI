@@ -9,4 +9,4 @@ export { default as Spinner } from "./Spinner";
 /**
  * Alias for TextButton. Check "Oui.BaseClasses.Button" for the button base class.
  */
-export { default as Button } from "./Button";
+export { default as Button } from "./TextButton";

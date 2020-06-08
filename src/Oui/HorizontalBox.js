@@ -55,6 +55,7 @@ class HorizontalBox extends Box {
 
     _updateChildDimensions() {
         let xPos = this._paddingLeft;
+        let highestChild = 0;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
             child._x = xPos;
@@ -64,10 +65,18 @@ class HorizontalBox extends Box {
             if (i < this._children.length - 1) {
                 xPos += Math.max(child._marginRight, this._children[i + 1]._marginLeft);
             }
+
+            if (!child._hasRelativeHeight && child.getPixelHeight() > highestChild) {
+                highestChild = child.getPixelHeight();
+            }
         }
 
         if (!this._hasRelativeWidth && xPos + this._paddingRight > this._width) {
             this.setWidth(xPos + this._paddingRight);
+        }
+
+        if (!this._hasRelativeHeight && highestChild > this._height) {
+            this.setHeight(highestChild + this._paddingTop + this._paddingBottom);
         }
     }
 }

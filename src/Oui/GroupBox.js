@@ -66,7 +66,8 @@ class GroupBox extends VerticalBox {
             x: calcPos.x,
             y: calcPos.y,
             width: this.getPixelWidth(),
-            height: this.getPixelHeight()
+            height: this.getPixelHeight(),
+            isDisabled: this.isDisabled()
         });
         return fullDesc;
     }
@@ -86,6 +87,7 @@ class GroupBox extends VerticalBox {
         handle.width = desc.width;
         handle.height = desc.height;
         handle.text = desc.text;
+        handle.isDisabled = desc.isDisabled;
     }
 }
 

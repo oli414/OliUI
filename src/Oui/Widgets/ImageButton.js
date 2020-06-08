@@ -11,6 +11,7 @@ class ImageButton extends Button {
     constructor(image = 0, onClick = null) {
         super(onClick);
         this._image = image;
+        this._hasBorder = false;
     }
 
     /**
@@ -31,7 +32,7 @@ class ImageButton extends Button {
 
     _getDescription() {
         let desc = super._getDescription();
-        desc.image = this.image;
+        desc.image = this._image;
         return desc;
     }
 

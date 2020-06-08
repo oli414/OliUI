@@ -20,6 +20,28 @@ class Element {
         this._isRemainingFiller = false;
 
         this._requireSync = false;
+
+        this._isDisabled = false;
+    }
+
+    /**
+     * Get wether or not this element is disabled (greyed out).
+     * @returns {boolean}
+     */
+    isDisabled() {
+        if (!this._isDisabled && this._parent != null) {
+            return this._parent.isDisabled();
+        }
+        return this._isDisabled;
+    }
+
+    /**
+     * Set wether or not this element is disabled (greyed out).
+     * @param {boolean} isDisabled 
+     */
+    setIsDisabled(isDisabled) {
+        this._isDisabled = isDisabled;
+        this.requestSync();
     }
 
     /**
@@ -681,6 +703,7 @@ class HorizontalBox extends Box {
 
     _updateChildDimensions() {
         let xPos = this._paddingLeft;
+        let highestChild = 0;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
             child._x = xPos;
@@ -690,10 +713,18 @@ class HorizontalBox extends Box {
             if (i < this._children.length - 1) {
                 xPos += Math.max(child._marginRight, this._children[i + 1]._marginLeft);
             }
+
+            if (!child._hasRelativeHeight && child.getPixelHeight() > highestChild) {
+                highestChild = child.getPixelHeight();
+            }
         }
 
         if (!this._hasRelativeWidth && xPos + this._paddingRight > this._width) {
             this.setWidth(xPos + this._paddingRight);
+        }
+
+        if (!this._hasRelativeHeight && highestChild > this._height) {
+            this.setHeight(highestChild + this._paddingTop + this._paddingBottom);
         }
     }
 }
@@ -748,7 +779,8 @@ class Widget extends Element {
             x: calcPos.x,
             y: calcPos.y,
             width: this.getPixelWidth(),
-            height: this.getPixelHeight()
+            height: this.getPixelHeight(),
+            isDisabled: this.isDisabled()
         }
     }
 
@@ -766,6 +798,8 @@ class Widget extends Element {
         handle.y = desc.y;
         handle.width = desc.width;
         handle.height = desc.height;
+        console.log("set " + desc.isDisabled);
+        handle.isDisabled = desc.isDisabled;
     }
 }
 
@@ -836,7 +870,8 @@ class GroupBox extends VerticalBox {
             x: calcPos.x,
             y: calcPos.y,
             width: this.getPixelWidth(),
-            height: this.getPixelHeight()
+            height: this.getPixelHeight(),
+            isDisabled: this.isDisabled()
         });
         return fullDesc;
     }
@@ -856,6 +891,7 @@ class GroupBox extends VerticalBox {
         handle.width = desc.width;
         handle.height = desc.height;
         handle.text = desc.text;
+        handle.isDisabled = desc.isDisabled;
     }
 }
 
@@ -864,7 +900,6 @@ class GroupBox extends VerticalBox {
  */
 class Button extends Widget {
     /**
-     * @param {string} [text] The button text.
      * @param {import("./Widget").onClickCallback} [onClick] Callback for when the button is clicked.
      */
     constructor(onClick = null) {
@@ -874,16 +909,56 @@ class Button extends Widget {
         this._name = this._type + "-" + this._name;
         this._height = 13;
         this._onClick = onClick;
+        this._hasBorder = true;
+        this._isPressed = false;
+    }
+
+    /**
+     * wether or not the button is stuck in a pressed down position (for toggleable buttons).
+     * @returns {boolean}
+     */
+    isPressed() {
+        return this._isPressed;
+    }
+
+    /**
+     * Set wether or not the button is stuck in a pressed down position (for toggleable buttons).
+     * @param {boolean} isPressed 
+     */
+    setIsPressed(isPressed) {
+        this._isPressed = isPressed;
+        this.requestSync();
+    }
+
+    /**
+     * Get wether or not the button has a visible border.
+     * @returns {boolean}
+     */
+    hasBorder() {
+        return this._hasBorder;
+    }
+
+    /**
+     * Set wether or not the button has a visible border.
+     * @param {boolean} hasBorder 
+     */
+    setBorder(hasBorder) {
+        this._hasBorder = hasBorder;
+        this.requestSync();
     }
 
     _getDescription() {
         let desc = super._getDescription();
         desc.onClick = () => { if (this._onClick) this._onClick(); };
+        desc.border = this._hasBorder;
+        desc.isPressed = this._isPressed;
         return desc;
     }
 
     _applyDescription(handle, desc) {
         super._applyDescription(handle, desc);
+        handle.border = desc.border;
+        handle.isPressed = this._isPressed;
     }
 }
 
@@ -991,6 +1066,7 @@ class ImageButton extends Button {
     constructor(image = 0, onClick = null) {
         super(onClick);
         this._image = image;
+        this._hasBorder = false;
     }
 
     /**
@@ -1011,7 +1087,7 @@ class ImageButton extends Button {
 
     _getDescription() {
         let desc = super._getDescription();
-        desc.image = this.image;
+        desc.image = this._image;
         return desc;
     }
 
@@ -1243,8 +1319,10 @@ var index = /*#__PURE__*/Object.freeze({
     Checkbox: Checkbox,
     Dropdown: Dropdown,
     Spinner: Spinner,
-    Button: Button
+    Button: TextButton
 });
+
+// This file bundles all the objects in OlUI so it can later be exported under a single namespace.
 
 var Oui = /*#__PURE__*/Object.freeze({
     __proto__: null,

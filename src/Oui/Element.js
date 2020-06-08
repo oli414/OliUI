@@ -22,6 +22,28 @@ class Element {
         this._isRemainingFiller = false;
 
         this._requireSync = false;
+
+        this._isDisabled = false;
+    }
+
+    /**
+     * Get wether or not this element is disabled (greyed out).
+     * @returns {boolean}
+     */
+    isDisabled() {
+        if (!this._isDisabled && this._parent != null) {
+            return this._parent.isDisabled();
+        }
+        return this._isDisabled;
+    }
+
+    /**
+     * Set wether or not this element is disabled (greyed out).
+     * @param {boolean} isDisabled 
+     */
+    setIsDisabled(isDisabled) {
+        this._isDisabled = isDisabled;
+        this.requestSync();
     }
 
     /**

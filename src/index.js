@@ -7,10 +7,20 @@ import Oui from "./Oui/index";
 function main() {
     ui.registerMenuItem("OliUI Demo", function () {
 
+
         let myWindow = new Oui.Window("My Window");
         myWindow.setWidth(300);
+
+        let groupBox = new Oui.GroupBox("Group Box");
+
         {
-            let groupBox = new Oui.GroupBox("Group Box");
+            let checkBox = new Oui.Widgets.Checkbox("Disable group box", (value) => {
+                groupBox.setIsDisabled(value);
+            });
+            myWindow.addChild(checkBox);
+        }
+
+        {
             myWindow.addChild(groupBox);
 
             {
@@ -18,13 +28,10 @@ function main() {
                 groupBox.addChild(label);
             }
 
-
             {
                 let button = new Oui.Widgets.Button("Click Me", () => {
-                    if (groupBox.getText() == "")
-                        groupBox.setText("Group Box");
-                    else
-                        groupBox.setText("");
+                    //button.setIsPressed(!button.isPressed());
+                    groupBox.setIsDisabled(true);
                 });
                 groupBox.addChild(button);
             }

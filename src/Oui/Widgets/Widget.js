@@ -50,7 +50,8 @@ class Widget extends Element {
             x: calcPos.x,
             y: calcPos.y,
             width: this.getPixelWidth(),
-            height: this.getPixelHeight()
+            height: this.getPixelHeight(),
+            isDisabled: this.isDisabled()
         }
     }
 
@@ -68,6 +69,8 @@ class Widget extends Element {
         handle.y = desc.y;
         handle.width = desc.width;
         handle.height = desc.height;
+        console.log("set " + desc.isDisabled);
+        handle.isDisabled = desc.isDisabled;
     }
 }
 
