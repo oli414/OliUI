@@ -97,13 +97,15 @@ class Spinner extends Widget {
         desc.onIncrement = () => {
             this._value += this._step;
             this._value = Number(this._value.toFixed(this._decimals));
-            if (this._onChange) this._onChange(this._value);
+            if (this._onChange)
+                this._onChange.call(this, this._value);
             this.requestSync();
         };
         desc.onDecrement = () => {
             this._value -= this._step;
             this._value = Number(this._value.toFixed(this._decimals));
-            if (this._onChange) this._onChange(this._value);
+            if (this._onChange)
+                this._onChange.call(this, this._value);
             this.requestSync();
         };
         desc.isChecked = this._isChecked;

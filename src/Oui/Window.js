@@ -29,6 +29,23 @@ class Window extends VerticalBox {
 
         this._requestedRefresh = false;
         this._openAtPosition = false;
+
+        this._onUpdate = null;
+        this._onClose = null;
+    }
+
+    /**
+     * Set the on update callback.
+     */
+    setOnUpdate(onUpdate) {
+        this._onUpdate = onUpdate;
+    }
+
+    /**
+     * Set the on update callback.
+     */
+    setOnClose(onClose) {
+        this._onClose = onClose;
     }
 
     /**
@@ -160,6 +177,13 @@ class Window extends VerticalBox {
             widgets: widgets,
             onUpdate: () => {
                 this._update();
+                if (this._onUpdate != null)
+                    this._onUpdate.call(this);
+            },
+            onClose: () => {
+                this._handle = null;
+                if (this._onClose != null)
+                    this._onClose.call(this);
             }
         };
         if (this._openAtPosition) {

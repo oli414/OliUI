@@ -48,7 +48,8 @@ class Dropdown extends Widget {
         desc.items = this._items;
         desc.onChange = (i) => {
             this._selectedIndex = i;
-            if (this._onChange) this._onChange(i);
+            if (this._onChange)
+                this._onChange.call(this, i);
         };
         desc.selectedIndex = this._selectedIndex;
         return desc;

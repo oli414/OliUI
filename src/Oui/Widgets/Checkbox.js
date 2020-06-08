@@ -49,7 +49,8 @@ class Checkbox extends Widget {
         desc.text = this._text;
         desc.onChange = (checked) => {
             this._isChecked = checked;
-            if (this._onChange) this._onChange(checked);
+            if (this._onChange)
+                this._onChange.call(this, checked);
         };
         desc.isChecked = this._isChecked;
         return desc;

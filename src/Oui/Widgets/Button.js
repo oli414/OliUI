@@ -62,7 +62,10 @@ class Button extends Widget {
 
     _getDescription() {
         let desc = super._getDescription();
-        desc.onClick = () => { if (this._onClick) this._onClick(); };
+        desc.onClick = () => {
+            if (this._onClick)
+                this._onClick.call(this);
+        };
         desc.border = this._hasBorder;
         desc.isPressed = this._isPressed;
         return desc;

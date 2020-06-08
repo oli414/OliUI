@@ -672,15 +672,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _this3._requestedRefresh = false;
             _this3._openAtPosition = false;
+
+            _this3._onUpdate = null;
+            _this3._onClose = null;
             return _this3;
         }
 
         /**
-         * Open the window.
+         * Set the on update callback.
          */
 
 
         _createClass(Window, [{
+            key: "setOnUpdate",
+            value: function setOnUpdate(onUpdate) {
+                this._onUpdate = onUpdate;
+            }
+
+            /**
+             * Set the on update callback.
+             */
+
+        }, {
+            key: "setOnClose",
+            value: function setOnClose(onClose) {
+                this._onClose = onClose;
+            }
+
+            /**
+             * Open the window.
+             */
+
+        }, {
             key: "open",
             value: function open() {
                 var desc = this._getDescription();
@@ -830,6 +853,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     widgets: widgets,
                     onUpdate: function onUpdate() {
                         _this4._update();
+                        if (_this4._onUpdate != null) _this4._onUpdate.call(_this4);
+                    },
+                    onClose: function onClose() {
+                        _this4._handle = null;
+                        if (_this4._onClose != null) _this4._onClose.call(_this4);
                     }
                 };
                 if (this._openAtPosition) {
@@ -1268,7 +1296,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 var desc = _get(Button.prototype.__proto__ || Object.getPrototypeOf(Button.prototype), "_getDescription", this).call(this);
                 desc.onClick = function () {
-                    if (_this9._onClick) _this9._onClick();
+                    if (_this9._onClick) _this9._onClick.call(_this9);
                 };
                 desc.border = this._hasBorder;
                 desc.isPressed = this._isPressed;
@@ -1559,7 +1587,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 desc.text = this._text;
                 desc.onChange = function (checked) {
                     _this14._isChecked = checked;
-                    if (_this14._onChange) _this14._onChange(checked);
+                    if (_this14._onChange) _this14._onChange.call(_this14, checked);
                 };
                 desc.isChecked = this._isChecked;
                 return desc;
@@ -1646,7 +1674,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 desc.items = this._items;
                 desc.onChange = function (i) {
                     _this16._selectedIndex = i;
-                    if (_this16._onChange) _this16._onChange(i);
+                    if (_this16._onChange) _this16._onChange.call(_this16, i);
                 };
                 desc.selectedIndex = this._selectedIndex;
                 return desc;
@@ -1798,13 +1826,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 desc.onIncrement = function () {
                     _this18._value += _this18._step;
                     _this18._value = Number(_this18._value.toFixed(_this18._decimals));
-                    if (_this18._onChange) _this18._onChange(_this18._value);
+                    if (_this18._onChange) _this18._onChange.call(_this18, _this18._value);
                     _this18.requestSync();
                 };
                 desc.onDecrement = function () {
                     _this18._value -= _this18._step;
                     _this18._value = Number(_this18._value.toFixed(_this18._decimals));
-                    if (_this18._onChange) _this18._onChange(_this18._value);
+                    if (_this18._onChange) _this18._onChange.call(_this18, _this18._value);
                     _this18.requestSync();
                 };
                 desc.isChecked = this._isChecked;

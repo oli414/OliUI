@@ -544,6 +544,23 @@ class Window extends VerticalBox {
 
         this._requestedRefresh = false;
         this._openAtPosition = false;
+
+        this._onUpdate = null;
+        this._onClose = null;
+    }
+
+    /**
+     * Set the on update callback.
+     */
+    setOnUpdate(onUpdate) {
+        this._onUpdate = onUpdate;
+    }
+
+    /**
+     * Set the on update callback.
+     */
+    setOnClose(onClose) {
+        this._onClose = onClose;
     }
 
     /**
@@ -675,6 +692,13 @@ class Window extends VerticalBox {
             widgets: widgets,
             onUpdate: () => {
                 this._update();
+                if (this._onUpdate != null)
+                    this._onUpdate.call(this);
+            },
+            onClose: () => {
+                this._handle = null;
+                if (this._onClose != null)
+                    this._onClose.call(this);
             }
         };
         if (this._openAtPosition) {
@@ -1024,7 +1048,10 @@ class Button extends Widget {
 
     _getDescription() {
         let desc = super._getDescription();
-        desc.onClick = () => { if (this._onClick) this._onClick(); };
+        desc.onClick = () => {
+            if (this._onClick)
+                this._onClick.call(this);
+        };
         desc.border = this._hasBorder;
         desc.isPressed = this._isPressed;
         return desc;
@@ -1221,7 +1248,8 @@ class Checkbox extends Widget {
         desc.text = this._text;
         desc.onChange = (checked) => {
             this._isChecked = checked;
-            if (this._onChange) this._onChange(checked);
+            if (this._onChange)
+                this._onChange.call(this, checked);
         };
         desc.isChecked = this._isChecked;
         return desc;
@@ -1281,7 +1309,8 @@ class Dropdown extends Widget {
         desc.items = this._items;
         desc.onChange = (i) => {
             this._selectedIndex = i;
-            if (this._onChange) this._onChange(i);
+            if (this._onChange)
+                this._onChange.call(this, i);
         };
         desc.selectedIndex = this._selectedIndex;
         return desc;
@@ -1391,13 +1420,15 @@ class Spinner extends Widget {
         desc.onIncrement = () => {
             this._value += this._step;
             this._value = Number(this._value.toFixed(this._decimals));
-            if (this._onChange) this._onChange(this._value);
+            if (this._onChange)
+                this._onChange.call(this, this._value);
             this.requestSync();
         };
         desc.onDecrement = () => {
             this._value -= this._step;
             this._value = Number(this._value.toFixed(this._decimals));
-            if (this._onChange) this._onChange(this._value);
+            if (this._onChange)
+                this._onChange.call(this, this._value);
             this.requestSync();
         };
         desc.isChecked = this._isChecked;
