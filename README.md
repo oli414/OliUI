@@ -134,6 +134,10 @@ window.addChild(verticalBox);
 ```
 ![](https://i.imgur.com/NstleLH.png)
 
+### Nesting
+
+With these layout building blocks you can build any GUI that you can dream of. Remember that you can always nest boxes to get the perfect layout.
+
 ## Documentation
 The entire module is documented using JSDoc comments.
 
