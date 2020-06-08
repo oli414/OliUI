@@ -118,6 +118,7 @@ window.addChild(verticalBox);
 ```
 
 ## Future Plans
+- Window tabs support.
 - Remove ~~and add elements~~ after a window has been opened.
 - Option to align a Box's child elements in the center, right, top or bottom.
 - Special type of Box in which the child elements can be positioned manually.
