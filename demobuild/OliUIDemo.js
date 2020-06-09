@@ -670,6 +670,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this3._minHeight = 100;
             _this3._maxHeight = 100;
 
+            _this3._titleBarColor = 1;
+            _this3._mainColor = 1;
+
             _this3._requestedRefresh = false;
             _this3._openAtPosition = false;
 
@@ -679,11 +682,76 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         /**
-         * Set the on update callback.
+         * Set the window title.
+         * @param {string} title 
          */
 
 
         _createClass(Window, [{
+            key: "setTitle",
+            value: function setTitle(title) {
+                this._title = title;
+                this.requestRefresh();
+            }
+
+            /**
+             * Get the window title.
+             * @returns {string}
+             */
+
+        }, {
+            key: "getTitle",
+            value: function getTitle() {
+                return this._title;
+            }
+
+            /**
+             * Get the main window color.
+             * @returns {number}
+             */
+
+        }, {
+            key: "getMainColor",
+            value: function getMainColor() {
+                return this._mainColor;
+            }
+
+            /**
+             * Get the title bar color.
+             * @returns {number}
+             */
+
+        }, {
+            key: "getTitleBarColor",
+            value: function getTitleBarColor() {
+                return this._titleBarColor;
+            }
+
+            /**
+             * Set the window colors. The title bar color is usually the same as the main color unless it is a window with tabs.
+             * @param {number} mainColor 
+             * @param {number} [titleBarColor] Optional, the main color will be used for the title bar if not present.
+             */
+
+        }, {
+            key: "setColors",
+            value: function setColors(mainColor) {
+                var titleBarColor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -1;
+
+                this._mainColor = mainColor;
+                if (titleBarColor < 0) {
+                    this._titleBarColor = mainColor;
+                } else {
+                    this._titleBarColor = titleBarColor;
+                }
+                this.requestRefresh();
+            }
+
+            /**
+             * Set the on update callback.
+             */
+
+        }, {
             key: "setOnUpdate",
             value: function setOnUpdate(onUpdate) {
                 this._onUpdate = onUpdate;
@@ -756,6 +824,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this._minWidth = this._width;
                     this._maxWidth = this._width;
                 }
+                this.requestSync();
             }
 
             /**
@@ -785,6 +854,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this._minHeight = this._height;
                     this._maxHeight = this._height;
                 }
+                this.requestSync();
             }
         }, {
             key: "setWidth",
@@ -797,6 +867,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this._minWidth = this._width;
                     this._maxWidth = this._width;
                 }
+                this.requestRefresh();
             }
         }, {
             key: "setHeight",
@@ -810,6 +881,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this._minHeight = this._height;
                     this._maxHeight = this._height;
                 }
+                this.requestRefresh();
             }
         }, {
             key: "getPixelWidth",
@@ -828,6 +900,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this._paddingBottom = bottom + 1;
                 this._paddingLeft = left;
                 this._paddingRight = right;
+                this.requestSync();
             }
         }, {
             key: "getWindow",
@@ -850,6 +923,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     minHeight: this._minHeight,
                     maxHeight: this._maxHeight,
                     title: this._title,
+                    colours: [this._titleBarColor, this._mainColor],
                     widgets: widgets,
                     onUpdate: function onUpdate() {
                         _this4._update();
@@ -868,6 +942,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 return desc;
             }
         }, {
+            key: "_applyDescription",
+            value: function _applyDescription(handle, desc) {
+                handle.width = desc.width;
+                handle.height = desc.height;
+                handle.minWidth = desc.minWidth;
+                handle.maxWidth = desc.maxWidth;
+                handle.minHeight = desc.minHeight;
+                handle.maxHeight = desc.maxHeight;
+                handle.title = desc.title;
+                handle.colours[0] = this._titleBarColor;
+                handle.colours[1] = this._mainColor;
+            }
+        }, {
             key: "_update",
             value: function _update() {
                 if (this._handle.width != this._width || this._handle.height != this._height) {
@@ -875,11 +962,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this.setHeight(this._handle.height);
                 }
                 _get(Window.prototype.__proto__ || Object.getPrototypeOf(Window.prototype), "_update", this).call(this);
-                this._requireSync = false;
+
+                if (this._requestedRefresh || this._requireSync) {
+                    var desc = this._getDescription();
+                    this._applyDescription(this._handle, desc);
+                    this._requireSync = false;
+                }
 
                 if (this._requestedRefresh) {
                     this._refresh();
-                    this._requestedRefresh;
+                    this._requestedRefresh = false;
                 }
             }
         }, {
@@ -2618,119 +2710,92 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     // Expose the OpenRCT2 to Visual Studio Code's Intellisense
 
-    function CreateWindow() {
-        var window = new Oui.Window("My Window");
-        window.setWidth(300);
-
-        var verticalBox = new Oui.VerticalBox();
-        verticalBox.setHeight(75);
-
-        var firstElement = new Oui.Widgets.Button("Top Button");
-        firstElement.setHeight(15);
-        verticalBox.addChild(firstElement);
-
-        var secondElement = new Oui.Widgets.Button("Bottom Button");
-        verticalBox.addChild(secondElement);
-
-        verticalBox.setRemainingHeightFiller(secondElement);
-        // secondElement will fill the remaining height.
-
-        window.addChild(verticalBox);
-
-        window.open();
-    }
-
     function main() {
+        var myWindow = new Oui.Window("My Window");
+        myWindow.setWidth(300);
+        myWindow.setHorizontalResize(true, 200, 600);
+        myWindow.setVerticalResize(true, 200, 600);
+
+        var groupBox = new Oui.GroupBox("Group Box");
+
+        {
+            var checkBox = new Oui.Widgets.Checkbox("Disable group box", function (value) {
+                groupBox.setIsDisabled(value);
+            });
+            myWindow.addChild(checkBox);
+        }
+
+        {
+            myWindow.addChild(groupBox);
+
+            {
+                var label = new Oui.Widgets.Label("Label");
+                groupBox.addChild(label);
+            }
+
+            {
+                var button = new Oui.Widgets.Button("Click Me", function () {
+                    myWindow._title = myWindow._title + "+";
+                    myWindow.setColors(Math.floor(Math.random() * 31));
+                });
+                groupBox.addChild(button);
+            }
+
+            {
+                var _checkBox = new Oui.Widgets.Checkbox("Checkbox", function () {
+                    console.log("On change");
+                });
+                groupBox.addChild(_checkBox);
+            }
+
+            {
+                var dropdown = new Oui.Widgets.Dropdown(["Option A", "Option B", "Option C"], function (i) {
+                    console.log("On change " + i);
+                });
+                groupBox.addChild(dropdown);
+            }
+
+            {
+                var spinner = new Oui.Widgets.Spinner(0, 0.1, function (val) {
+                    console.log("On change " + val);
+                });
+                groupBox.addChild(spinner);
+            }
+        }
+
+        var listView = new Oui.Widgets.ListView();
+
+        var columns = [new Oui.Widgets.ListView.ListViewColumn("Name"), new Oui.Widgets.ListView.ListViewColumn("Age"), new Oui.Widgets.ListView.ListViewColumn("Money")];
+
+        columns[0].setMaxWidth(100);
+        columns[0].setCanSort(true, "descending");
+
+        listView.setColumns(columns);
+        listView.addItem(["Henk", "0", "0.1"]);
+        listView.addItem(["Xavier", "10", "10"]);
+        listView.addItem(["Bas", "30", "100"]);
+        listView.setIsStriped(true);
+        listView.setCanSelect(true);
+        listView.setSelectedCell(1, 1);
+        myWindow.addChild(listView);
+
+        {
+            var _button = new Oui.Widgets.Button("Add Item", function () {
+                listView.addItem(["Kees", "33", "800"]);
+            });
+            myWindow.addChild(_button);
+        }
+        /*
+        let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
+        myWindow.addChild(viewportWidget);
+        myWindow.setRemainingHeightFiller(viewportWidget);
+         viewportWidget.setView(1000, 1000);
+        //viewportWidget.setRotation(1);
+        */
+
         ui.registerMenuItem("OliUI Demo", function () {
 
-            CreateWindow();
-            /*
-            let myWindow = new Oui.Window("My Window");
-            myWindow.setWidth(300);
-            myWindow.setHorizontalResize(true, 200, 600);
-            myWindow.setVerticalResize(true, 200, 600);
-             let groupBox = new Oui.GroupBox("Group Box");
-             {
-                let checkBox = new Oui.Widgets.Checkbox("Disable group box", (value) => {
-                    groupBox.setIsDisabled(value);
-                });
-                myWindow.addChild(checkBox);
-            }
-             {
-                myWindow.addChild(groupBox);
-                 {
-                    let label = new Oui.Widgets.Label("Label");
-                    groupBox.addChild(label);
-                }
-                 {
-                    let button = new Oui.Widgets.Button("Click Me", () => {
-                        button.setIsPressed(!button.isPressed());
-                    });
-                    groupBox.addChild(button);
-                }
-                 {
-                    let checkBox = new Oui.Widgets.Checkbox("Checkbox", () => { console.log("On change") });
-                    groupBox.addChild(checkBox);
-                }
-                 {
-                    let dropdown = new Oui.Widgets.Dropdown(["Option A", "Option B", "Option C"], (i) => { console.log("On change " + i) });
-                    groupBox.addChild(dropdown);
-                }
-                 {
-                    let spinner = new Oui.Widgets.Spinner(0, 0.1, (val) => { console.log("On change " + val) });
-                    groupBox.addChild(spinner);
-                }
-            }
-             let listView = new Oui.Widgets.ListView();
-             let columns = [
-                new Oui.Widgets.ListView.ListViewColumn("Name"),
-                new Oui.Widgets.ListView.ListViewColumn("Age"),
-                new Oui.Widgets.ListView.ListViewColumn("Money")
-            ]
-             columns[0].setMaxWidth(100);
-            columns[0].setCanSort(true, "descending");
-             listView.setColumns(columns);
-            listView.addItem([
-                "Henk",
-                "0",
-                "0.1"
-            ]);
-            listView.addItem([
-                "Xavier",
-                "10",
-                "10"
-            ]);
-            listView.addItem([
-                "Bas",
-                "30",
-                "100"
-            ]);
-            //listView.setIsStriped(true);
-            listView.setCanSelect(true);
-            listView.setSelectedCell(1, 1);
-            myWindow.addChild(listView);
-              {
-                let button = new Oui.Widgets.Button("Add Item", () => {
-                    listView.addItem([
-                        "Kees",
-                        "33",
-                        "800"
-                    ]);
-                });
-                myWindow.addChild(button);
-            }
-            */
-            /*
-            let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
-            myWindow.addChild(viewportWidget);
-            myWindow.setRemainingHeightFiller(viewportWidget);
-             viewportWidget.setView(1000, 1000);
-            //viewportWidget.setRotation(1);
-            */
-
             myWindow.open();
-
-            CreateWindow();
         });
     }
 

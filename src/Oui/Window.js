@@ -27,11 +27,63 @@ class Window extends VerticalBox {
         this._minHeight = 100;
         this._maxHeight = 100;
 
+        this._titleBarColor = 1;
+        this._mainColor = 1;
+
         this._requestedRefresh = false;
         this._openAtPosition = false;
 
         this._onUpdate = null;
         this._onClose = null;
+    }
+
+    /**
+     * Set the window title.
+     * @param {string} title 
+     */
+    setTitle(title) {
+        this._title = title;
+        this.requestRefresh();
+    }
+
+    /**
+     * Get the window title.
+     * @returns {string}
+     */
+    getTitle() {
+        return this._title;
+    }
+
+    /**
+     * Get the main window color.
+     * @returns {number}
+     */
+    getMainColor() {
+        return this._mainColor;
+    }
+
+    /**
+     * Get the title bar color.
+     * @returns {number}
+     */
+    getTitleBarColor() {
+        return this._titleBarColor;
+    }
+
+    /**
+     * Set the window colors. The title bar color is usually the same as the main color unless it is a window with tabs.
+     * @param {number} mainColor 
+     * @param {number} [titleBarColor] Optional, the main color will be used for the title bar if not present.
+     */
+    setColors(mainColor, titleBarColor = -1) {
+        this._mainColor = mainColor;
+        if (titleBarColor < 0) {
+            this._titleBarColor = mainColor;
+        }
+        else {
+            this._titleBarColor = titleBarColor;
+        }
+        this.requestRefresh();
     }
 
     /**
@@ -93,6 +145,7 @@ class Window extends VerticalBox {
             this._minWidth = this._width;
             this._maxWidth = this._width;
         }
+        this.requestSync();
     }
 
     /**
@@ -117,6 +170,7 @@ class Window extends VerticalBox {
             this._minHeight = this._height;
             this._maxHeight = this._height;
         }
+        this.requestSync();
     }
 
     setWidth(pixels) {
@@ -128,6 +182,7 @@ class Window extends VerticalBox {
             this._minWidth = this._width;
             this._maxWidth = this._width;
         }
+        this.requestRefresh();
     }
 
     setHeight(pixels) {
@@ -141,6 +196,7 @@ class Window extends VerticalBox {
             this._minHeight = this._height;
             this._maxHeight = this._height;
         }
+        this.requestRefresh();
     }
 
     getPixelWidth() {
@@ -156,6 +212,7 @@ class Window extends VerticalBox {
         this._paddingBottom = bottom + 1;
         this._paddingLeft = left;
         this._paddingRight = right;
+        this.requestSync();
     }
 
     getWindow() {
@@ -174,6 +231,9 @@ class Window extends VerticalBox {
             minHeight: this._minHeight,
             maxHeight: this._maxHeight,
             title: this._title,
+            colours: [
+                this._titleBarColor, this._mainColor
+            ],
             widgets: widgets,
             onUpdate: () => {
                 this._update();
@@ -194,17 +254,34 @@ class Window extends VerticalBox {
         return desc;
     }
 
+    _applyDescription(handle, desc) {
+        handle.width = desc.width;
+        handle.height = desc.height;
+        handle.minWidth = desc.minWidth;
+        handle.maxWidth = desc.maxWidth;
+        handle.minHeight = desc.minHeight;
+        handle.maxHeight = desc.maxHeight;
+        handle.title = desc.title;
+        handle.colours[0] = this._titleBarColor;
+        handle.colours[1] = this._mainColor;
+    }
+
     _update() {
         if (this._handle.width != this._width || this._handle.height != this._height) {
             this.setWidth(this._handle.width);
             this.setHeight(this._handle.height);
         }
         super._update();
-        this._requireSync = false;
+
+        if (this._requestedRefresh || this._requireSync) {
+            let desc = this._getDescription();
+            this._applyDescription(this._handle, desc);
+            this._requireSync = false;
+        }
 
         if (this._requestedRefresh) {
             this._refresh();
-            this._requestedRefresh
+            this._requestedRefresh = false;
         }
     }
 
