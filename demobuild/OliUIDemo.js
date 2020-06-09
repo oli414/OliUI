@@ -958,8 +958,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "_update",
             value: function _update() {
                 if (this._handle.width != this._width || this._handle.height != this._height) {
-                    this.setWidth(this._handle.width);
-                    this.setHeight(this._handle.height);
+                    this._width = this._handle.width;
+                    this._height = this._handle.height;
+                    this.requestSync();
                 }
                 _get(Window.prototype.__proto__ || Object.getPrototypeOf(Window.prototype), "_update", this).call(this);
 
@@ -1142,7 +1143,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "getHandle",
             value: function getHandle() {
                 var window = this.getWindow();
-                if (window != null) {
+                if (window != null && window.isOpen()) {
                     return window._handle.findWidget(this._name);
                 }
                 return null;
@@ -2516,63 +2517,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     ListView.ListViewColumn = ListViewColumn;
 
-    var Viewport = function () {
-        function Viewport() {
-            _classCallCheck(this, Viewport);
-
-            this.left = 0;
-            this.top = 0;
-            this.right = 0;
-            this.bottom = 0;
-            this.rotation = 0;
-            this.zoom = 0;
-            this.visibilityFlags = 0;
-        }
-
-        _createClass(Viewport, [{
-            key: "getCentrePosition",
-            value: function getCentrePosition() {
-                return {
-                    x: this.left + this.right / 2,
-                    y: this.top + this.bottom / 2
-                };
-            }
-        }, {
-            key: "moveTo",
-            value: function moveTo(pos) {
-                var width = this.right - this.left;
-                var height = this.bottom - this.top;
-
-                this.left = pos.x - width / 2;
-                this.right = pos.x + width / 2;
-                this.top = pos.y - height / 2;
-                this.bottom = pos.y + height / 2;
-                if (pos.z) {
-                    this.top -= pos.z;
-                    this.bottom -= pos.z;
-                }
-            }
-        }, {
-            key: "scrollTo",
-            value: function scrollTo(pos) {
-                var width = this.right - this.left;
-                var height = this.bottom - this.top;
-
-                this.left = pos.x - width / 2;
-                this.right = pos.x + width / 2;
-                this.top = pos.y - height / 2;
-                this.bottom = pos.y + height / 2;
-            }
-        }]);
-
-        return Viewport;
-    }();
-
     /**
      * WIP. Viewport widget does not work as expected yet. Only use for testing.
      * A viewport widget. The size of the viewport widget cannot be changed while the window is open.
      */
-
 
     var ViewportWidget = function (_Widget7) {
         _inherits(ViewportWidget, _Widget7);
@@ -2592,10 +2540,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this21._type = "viewport";
             _this21._name = _this21._type + "-" + _this21._name;
             _this21._height = 64;
-            _this21._viewport = new Viewport();
 
             _this21._viewX = viewX;
             _this21._viewY = viewY;
+            _this21._zoom = 0;
+            _this21._rotation = 0;
+
+            _this21._scrollView = false;
+
+            _this21._initMove = false;
             return _this21;
         }
 
@@ -2611,7 +2564,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function setView(viewX, viewY) {
                 this._viewX = viewX;
                 this._viewY = viewY;
-                this.updateViewport();
+                this._scrollView = false;
+
+                var handle = this.getHandle();
+                if (handle != null) handle.viewport.moveTo({ x: viewX, y: viewY });
+            }
+        }, {
+            key: "scrollView",
+            value: function scrollView(viewX, viewY) {
+                this._viewX = viewX;
+                this._viewY = viewY;
+                this._scrollView = true;
+
+                var handle = this.getHandle();
+                if (handle != null) handle.viewport.scrollTo({ x: viewX, y: viewY });
             }
 
             /**
@@ -2622,7 +2588,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "setZoom",
             value: function setZoom(zoomLevel) {
-                this._viewport.zoom = zoomLevel;
+                this._zoom = zoomLevel;
                 this.requestSync();
             }
 
@@ -2634,54 +2600,65 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "setRotation",
             value: function setRotation(rotation) {
-                this._viewport.rotation = rotation;
-                this.requestSync();
-            }
-
-            /**
-             * Recalculate the viewports positions.
-             */
-
-        }, {
-            key: "updateViewport",
-            value: function updateViewport() {
-                var width = this.getPixelWidth();
-                var height = this.getPixelHeight();
-                this._viewport.left = this._viewX - width / 2;
-                this._viewport.right = this._viewX + width / 2;
-                this._viewport.top = this._viewY - height / 2;
-                this._viewport.bottom = this._viewY + height / 2;
+                this._rotation = rotation;
                 this.requestSync();
             }
         }, {
             key: "_getDescription",
             value: function _getDescription() {
                 var desc = _get(ViewportWidget.prototype.__proto__ || Object.getPrototypeOf(ViewportWidget.prototype), "_getDescription", this).call(this);
-                desc.viewport = this._viewport;
+                this._initMove = true;
+                this.requestRefresh();
                 return desc;
             }
         }, {
             key: "_applyDescription",
             value: function _applyDescription(handle, desc) {
                 _get(ViewportWidget.prototype.__proto__ || Object.getPrototypeOf(ViewportWidget.prototype), "_applyDescription", this).call(this, handle, desc);
-                handle.viewport.top = desc.viewport.top;
-                handle.viewport.bottom = desc.viewport.bottom;
-                handle.viewport.left = desc.viewport.left;
-                handle.viewport.right = desc.viewport.right;
-                handle.viewport.rotation = desc.viewport.rotation;
-                handle.viewport.zoom = desc.viewport.zoom;
-                handle.viewport.visibilityFlags = desc.viewport.visibilityFlags;
+                handle.viewport.rotation = this._rotation;
+                handle.viewport.zoom = this._zoom;
+                handle.viewport.visibilityFlags = this._visibilityFlags;
+
+                if (this._initMove) {
+                    handle.viewport.moveTo({ x: this._viewX, y: this._viewY });
+                    this._initMove = false;
+                }
             }
         }, {
             key: "_update",
             value: function _update() {
-                this.updateViewport();
                 _get(ViewportWidget.prototype.__proto__ || Object.getPrototypeOf(ViewportWidget.prototype), "_update", this).call(this);
             }
         }]);
 
         return ViewportWidget;
     }(Widget);
+
+    /**
+     * Dropdown implementation for a color picker as a temporary solution until a real color picker widget is added to the OpenRCT2 plugin API.
+     */
+
+
+    var ColorPicker = function (_Dropdown) {
+        _inherits(ColorPicker, _Dropdown);
+
+        /**
+         * 
+         * @param {import("./Widget").onChangeCallback} [onChange] Callback for when a color is selected. The callback's parameter is the color palette index.
+         */
+        function ColorPicker() {
+            var onChange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+            _classCallCheck(this, ColorPicker);
+
+            var _this22 = _possibleConstructorReturn(this, (ColorPicker.__proto__ || Object.getPrototypeOf(ColorPicker)).call(this, ["Black", "Grey", "White", "Dark Purple", "Light Purple", "Bright Purple", "Dark Blue", "Light Blue", "Icy Blue", "Teal", "Aquamarine", "Saturated Green", "Dark Green", "Moss Green", "Bright Green", "Olive Green", "Dark Olive Green", "Bright Yellow", "Yellow", "Dark Yellow", "Light Orange", "Dark Orange", "Light Brown", "Saturated Brown", "Dark Brown", "Salmon Pink", "Bordeaux Red", "Saturated Red", "Bright Red", "Dark Pink", "Bright Pink", "Light Pink"], onChange));
+
+            _this22._height = 12;
+            return _this22;
+        }
+
+        return ColorPicker;
+    }(Dropdown);
 
     var index = /*#__PURE__*/Object.freeze({
         __proto__: null,
@@ -2693,6 +2670,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         Spinner: Spinner,
         ListView: ListView,
         ViewportWidget: ViewportWidget,
+        ColorPicker: ColorPicker,
         Button: TextButton
     });
 
@@ -2761,6 +2739,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 });
                 groupBox.addChild(spinner);
             }
+
+            {
+                var colorPicker = new Oui.Widgets.ColorPicker(function () {});
+                groupBox.addChild(colorPicker);
+            }
         }
 
         var listView = new Oui.Widgets.ListView();
@@ -2785,13 +2768,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             });
             myWindow.addChild(_button);
         }
-        /*
-        let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
+
+        var viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
         myWindow.addChild(viewportWidget);
         myWindow.setRemainingHeightFiller(viewportWidget);
-         viewportWidget.setView(1000, 1000);
+
+        viewportWidget.setView(1000, 1000);
         //viewportWidget.setRotation(1);
-        */
+
+
+        {
+            var _button2 = new Oui.Widgets.Button("Add Item", function () {
+                viewportWidget.setView(viewportWidget._viewX + 1000, viewportWidget._viewY + 1000);
+            });
+            myWindow.addChild(_button2);
+        }
 
         ui.registerMenuItem("OliUI Demo", function () {
 

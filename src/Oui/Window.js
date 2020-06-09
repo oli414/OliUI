@@ -268,8 +268,9 @@ class Window extends VerticalBox {
 
     _update() {
         if (this._handle.width != this._width || this._handle.height != this._height) {
-            this.setWidth(this._handle.width);
-            this.setHeight(this._handle.height);
+            this._width = this._handle.width;
+            this._height = this._handle.height;
+            this.requestSync();
         }
         super._update();
 

@@ -36,7 +36,7 @@ class Widget extends Element {
      */
     getHandle() {
         let window = this.getWindow();
-        if (window != null) {
+        if (window != null && window.isOpen()) {
             return window._handle.findWidget(this._name);
         }
         return null;

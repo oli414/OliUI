@@ -49,6 +49,13 @@ function main() {
             let spinner = new Oui.Widgets.Spinner(0, 0.1, (val) => { console.log("On change " + val) });
             groupBox.addChild(spinner);
         }
+
+        {
+            let colorPicker = new Oui.Widgets.ColorPicker(() => {
+
+            });
+            groupBox.addChild(colorPicker);
+        }
     }
 
     let listView = new Oui.Widgets.ListView();
@@ -94,14 +101,21 @@ function main() {
         });
         myWindow.addChild(button);
     }
-    /*
+
     let viewportWidget = new Oui.Widgets.ViewportWidget(1000, 1000);
     myWindow.addChild(viewportWidget);
     myWindow.setRemainingHeightFiller(viewportWidget);
 
     viewportWidget.setView(1000, 1000);
     //viewportWidget.setRotation(1);
-    */
+
+
+    {
+        let button = new Oui.Widgets.Button("Add Item", () => {
+            viewportWidget.setView(viewportWidget._viewX + 1000, viewportWidget._viewY + 1000);
+        });
+        myWindow.addChild(button);
+    }
 
     ui.registerMenuItem("OliUI Demo", function () {
 
