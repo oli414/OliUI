@@ -7,19 +7,10 @@ import Oui from "./Oui/index";
 function main() {
     let myWindow = new Oui.Window("My Window");
     myWindow.setWidth(300);
-    myWindow.setHorizontalResize(true, 200, 600);
-    myWindow.setVerticalResize(true, 200, 600);
 
-    let groupBox = new Oui.GroupBox("Group Box");
 
     {
-        let checkBox = new Oui.Widgets.Checkbox("Disable group box", (value) => {
-            groupBox.setIsDisabled(value);
-        });
-        myWindow.addChild(checkBox);
-    }
-
-    {
+        let groupBox = new Oui.GroupBox("Input Elements");
         myWindow.addChild(groupBox);
 
         {
@@ -108,7 +99,6 @@ function main() {
 
     viewportWidget.setView(1000, 1000);
     //viewportWidget.setRotation(1);
-
 
     {
         let button = new Oui.Widgets.Button("Add Item", () => {

@@ -1293,7 +1293,7 @@ class Checkbox extends Widget {
         this._name = this._type + "-" + this._name;
         this._height = 10;
         this._onChange = onChange;
-        this._isChecked;
+        this._isChecked = false;
     }
 
     /**
@@ -1324,6 +1324,7 @@ class Checkbox extends Widget {
     _getDescription() {
         let desc = super._getDescription();
         desc.text = this._text;
+
         desc.onChange = (checked) => {
             this._isChecked = checked;
             if (this._onChange)

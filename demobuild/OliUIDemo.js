@@ -1633,7 +1633,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this13._name = _this13._type + "-" + _this13._name;
             _this13._height = 10;
             _this13._onChange = onChange;
-            _this13._isChecked;
+            _this13._isChecked = false;
             return _this13;
         }
 
@@ -1678,6 +1678,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 var desc = _get(Checkbox.prototype.__proto__ || Object.getPrototypeOf(Checkbox.prototype), "_getDescription", this).call(this);
                 desc.text = this._text;
+
                 desc.onChange = function (checked) {
                     _this14._isChecked = checked;
                     if (_this14._onChange) _this14._onChange.call(_this14, checked);
@@ -2691,19 +2692,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     function main() {
         var myWindow = new Oui.Window("My Window");
         myWindow.setWidth(300);
-        myWindow.setHorizontalResize(true, 200, 600);
-        myWindow.setVerticalResize(true, 200, 600);
-
-        var groupBox = new Oui.GroupBox("Group Box");
 
         {
-            var checkBox = new Oui.Widgets.Checkbox("Disable group box", function (value) {
-                groupBox.setIsDisabled(value);
-            });
-            myWindow.addChild(checkBox);
-        }
-
-        {
+            var groupBox = new Oui.GroupBox("Input Elements");
             myWindow.addChild(groupBox);
 
             {
@@ -2720,10 +2711,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             {
-                var _checkBox = new Oui.Widgets.Checkbox("Checkbox", function () {
+                var checkBox = new Oui.Widgets.Checkbox("Checkbox", function () {
                     console.log("On change");
                 });
-                groupBox.addChild(_checkBox);
+                groupBox.addChild(checkBox);
             }
 
             {
@@ -2775,7 +2766,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         viewportWidget.setView(1000, 1000);
         //viewportWidget.setRotation(1);
-
 
         {
             var _button2 = new Oui.Widgets.Button("Add Item", function () {
