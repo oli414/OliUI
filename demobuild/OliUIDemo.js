@@ -2782,7 +2782,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     registerPlugin({
         name: 'OliUIDemo',
-        version: '1.0',
+        version: '1.1',
+        licence: 'MIT',
         authors: ['Oli414'],
         type: 'local',
         main: main
