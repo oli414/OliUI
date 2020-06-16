@@ -271,6 +271,7 @@ class Window extends VerticalBox {
             this._width = this._handle.width;
             this._height = this._handle.height;
             this.requestSync();
+            this._updateChildDimensions();
         }
         super._update();
 

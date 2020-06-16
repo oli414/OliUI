@@ -961,6 +961,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this._width = this._handle.width;
                     this._height = this._handle.height;
                     this.requestSync();
+                    this._updateChildDimensions();
                 }
                 _get(Window.prototype.__proto__ || Object.getPrototypeOf(Window.prototype), "_update", this).call(this);
 
