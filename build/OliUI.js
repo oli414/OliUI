@@ -5,10 +5,10 @@ class Element {
     constructor() {
         this._parent = null;
 
-        this._marginTop = 0;
-        this._marginBottom = 2;
-        this._marginLeft = 0;
-        this._marginRight = 0;
+        this._marginTop = 4;
+        this._marginBottom = 4;
+        this._marginLeft = 4;
+        this._marginRight = 4;
 
         this._x = 0;
         this._y = 0;
@@ -286,7 +286,7 @@ class Box extends Element {
 
         this._width = 100;
 
-        this.setPadding(3, 3, 4, 4);
+        this.setPadding(4, 4, 6, 6);
 
         this._isHorizontal = false;
 
@@ -786,7 +786,7 @@ class Window extends VerticalBox {
             this._width = this._handle.width;
             this._height = this._handle.height;
             this.requestSync();
-            this._updateChildDimensions();
+            this.onDimensionsChanged();
         }
         super._update();
 
@@ -985,10 +985,10 @@ class GroupBox extends VerticalBox {
         this._text = text;
         this._name = "groupbox-" + Widget.NumberGen();
         if (this._text != "")
-            this._paddingTop = 13;
+            this._paddingTop = 15;
         else
-            this._paddingTop = 8;
-        this._paddingBottom = 5;
+            this._paddingTop = 10;
+        this._paddingBottom = 6;
     }
 
     /**
@@ -999,7 +999,7 @@ class GroupBox extends VerticalBox {
         return this._text;
     }
 
-    /**
+    /** 
      * Set the groupbox label text. Set to an empty string to remove the label text.
      * @param {string} text
      */
@@ -1160,6 +1160,11 @@ class Label extends Widget {
      */
     constructor(text = "") {
         super();
+
+        this._marginTop = 2;
+        this._marginBottom = 2;
+        this._marginLeft = 2;
+        this._marginRight = 2;
 
         this._type = "label";
         this._text = text;
@@ -1373,6 +1378,15 @@ class Dropdown extends Widget {
      */
     getItems() {
         return this._items.slice(0);
+    }
+
+    getSelectedItem() {
+        return this._selectedIndex;
+    }
+
+    setSelectedItem(itemIndex) {
+        this._selectedIndex = itemIndex;
+        this.requestSync();
     }
 
     /**
@@ -2052,15 +2066,15 @@ class ViewportWidget extends Widget {
     _getDescription() {
         let desc = super._getDescription();
         this._initMove = true;
-        this.requestRefresh();
+        this.requestSync();
         return desc;
     }
 
     _applyDescription(handle, desc) {
         super._applyDescription(handle, desc);
-        handle.viewport.rotation = this._rotation;
-        handle.viewport.zoom = this._zoom;
-        handle.viewport.visibilityFlags = this._visibilityFlags;
+        //handle.viewport.rotation = this._rotation;
+        //handle.viewport.zoom = this._zoom;
+        //handle.viewport.visibilityFlags = this._visibilityFlags;
 
         if (this._initMove) {
             handle.viewport.moveTo({ x: this._viewX, y: this._viewY });
