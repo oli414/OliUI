@@ -303,7 +303,7 @@ class ListView extends Widget {
     }
 
     /**
-     * @param {ListViewColumn|string} columns 
+     * @param {ListViewColumn[]|string[]} columns 
      */
     setColumns(columns) {
         let originalColumnsSize = this._columns.length;
@@ -359,7 +359,7 @@ class ListView extends Widget {
 
     /**
      * Get all the items in this list view.
-     * @returns {string[]}
+     * @returns {string[][]}
      */
     getItems() {
         return this._items;
@@ -371,6 +371,10 @@ class ListView extends Widget {
      */
     removeItem(index) {
         this._items.splice(index, 1);
+        if (this._selectedRow == index)
+            this._selectedRow = this._selectedColumn = -1;
+        else if (this._selectedRow > index)
+            this._selectedRow--;
         this.requestRefresh();
     }
 
@@ -412,7 +416,7 @@ class ListView extends Widget {
             desc.showColumnHeaders = false; // Showing column headers when there are no columns causes a crash.
 
         desc.canSelect = this._canSelect;
-        if (this._canSelect && this._selectedRow > 0 && this._selectedColumn > 0) {
+        if (this._canSelect && this._selectedRow >= 0 && this._selectedColumn >= 0) {
             desc.selectedCell = {
                 row: this._selectedRow,
                 column: this._selectedColumn
