@@ -1131,6 +1131,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this6.setMargins(2, 4, 2, 2);
             _this6._type = "none";
             _this6._name = NumberGen();
+            _this6._tooltip = "";
             return _this6;
         }
 
@@ -1149,11 +1150,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
                 return null;
             }
+
+            /**
+             * Set the widget's tooltip.
+             * @param {number} text Tooltip to display. 
+             */
+
+        }, {
+            key: "setTooltip",
+            value: function setTooltip(text) {
+                this._tooltip = text;
+                this.requestSync();
+            }
         }, {
             key: "_getDescription",
             value: function _getDescription() {
                 var calcPos = this._getWindowPixelPosition();
-                return {
+                var desc = {
                     type: this._type,
                     name: this._name,
                     x: calcPos.x,
@@ -1162,6 +1175,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     height: this.getPixelHeight(),
                     isDisabled: this.isDisabled()
                 };
+                if (this._tooltip != "") {
+                    desc.tooltip = this._tooltip;
+                }
+                return desc;
             }
         }, {
             key: "_update",
@@ -1181,6 +1198,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 handle.width = desc.width;
                 handle.height = desc.height;
                 handle.isDisabled = desc.isDisabled;
+                if (handle.tooltip != this._tooltip) {
+                    handle.tooltip = this._tooltip;
+                }
             }
         }]);
 

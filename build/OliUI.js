@@ -928,6 +928,7 @@ class Widget extends Element {
         this.setMargins(2, 4, 2, 2);
         this._type = "none";
         this._name = NumberGen();
+        this._tooltip = "";
     }
 
     /**
@@ -942,9 +943,18 @@ class Widget extends Element {
         return null;
     }
 
+    /**
+     * Set the widget's tooltip.
+     * @param {number} text Tooltip to display. 
+     */
+    setTooltip(text) {
+        this._tooltip = text;
+        this.requestSync();
+    }
+
     _getDescription() {
         let calcPos = this._getWindowPixelPosition();
-        return {
+        let desc = {
             type: this._type,
             name: this._name,
             x: calcPos.x,
@@ -952,7 +962,11 @@ class Widget extends Element {
             width: this.getPixelWidth(),
             height: this.getPixelHeight(),
             isDisabled: this.isDisabled()
+        };
+        if (this._tooltip != "") {
+            desc.tooltip = this._tooltip;
         }
+        return desc;
     }
 
     _update() {
@@ -970,6 +984,9 @@ class Widget extends Element {
         handle.width = desc.width;
         handle.height = desc.height;
         handle.isDisabled = desc.isDisabled;
+        if (handle.tooltip != this._tooltip) {
+            handle.tooltip = this._tooltip;
+        }
     }
 }
 
