@@ -44,7 +44,7 @@ class ColorPicker extends Dropdown {
             "Light Pink",
         ], onChange);
 
-        this._height = 12;
+        this._height = 15;
     }
 }
 
