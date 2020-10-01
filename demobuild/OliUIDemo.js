@@ -2340,7 +2340,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-             * @param {ListViewColumn|string} columns 
+             * @param {ListViewColumn[]|string[]} columns 
              */
 
         }, {
@@ -2404,7 +2404,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             /**
              * Get all the items in this list view.
-             * @returns {string[]}
+             * @returns {string[][]}
              */
 
         }, {
@@ -2422,6 +2422,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "removeItem",
             value: function removeItem(index) {
                 this._items.splice(index, 1);
+                if (this._selectedRow == index) this._selectedRow = this._selectedColumn = -1;else if (this._selectedRow > index) this._selectedRow--;
                 this.requestRefresh();
             }
 
@@ -2469,7 +2470,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 if (this._columns.length == 0) desc.showColumnHeaders = false; // Showing column headers when there are no columns causes a crash.
 
                 desc.canSelect = this._canSelect;
-                if (this._canSelect && this._selectedRow > 0 && this._selectedColumn > 0) {
+                if (this._canSelect && this._selectedRow >= 0 && this._selectedColumn >= 0) {
                     desc.selectedCell = {
                         row: this._selectedRow,
                         column: this._selectedColumn

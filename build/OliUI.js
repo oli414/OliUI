@@ -5,10 +5,10 @@ class Element {
     constructor() {
         this._parent = null;
 
-        this._marginTop = 4;
-        this._marginBottom = 4;
-        this._marginLeft = 4;
-        this._marginRight = 4;
+        this._marginTop = 0;
+        this._marginBottom = 2;
+        this._marginLeft = 0;
+        this._marginRight = 0;
 
         this._x = 0;
         this._y = 0;
@@ -286,7 +286,7 @@ class Box extends Element {
 
         this._width = 100;
 
-        this.setPadding(4, 4, 6, 6);
+        this.setPadding(3, 3, 4, 4);
 
         this._isHorizontal = false;
 
@@ -786,7 +786,7 @@ class Window extends VerticalBox {
             this._width = this._handle.width;
             this._height = this._handle.height;
             this.requestSync();
-            this.onDimensionsChanged();
+            this._updateChildDimensions();
         }
         super._update();
 
@@ -985,10 +985,10 @@ class GroupBox extends VerticalBox {
         this._text = text;
         this._name = "groupbox-" + Widget.NumberGen();
         if (this._text != "")
-            this._paddingTop = 15;
+            this._paddingTop = 13;
         else
-            this._paddingTop = 10;
-        this._paddingBottom = 6;
+            this._paddingTop = 8;
+        this._paddingBottom = 5;
     }
 
     /**
@@ -999,7 +999,7 @@ class GroupBox extends VerticalBox {
         return this._text;
     }
 
-    /** 
+    /**
      * Set the groupbox label text. Set to an empty string to remove the label text.
      * @param {string} text
      */
@@ -1160,11 +1160,6 @@ class Label extends Widget {
      */
     constructor(text = "") {
         super();
-
-        this._marginTop = 2;
-        this._marginBottom = 2;
-        this._marginLeft = 2;
-        this._marginRight = 2;
 
         this._type = "label";
         this._text = text;
@@ -1378,15 +1373,6 @@ class Dropdown extends Widget {
      */
     getItems() {
         return this._items.slice(0);
-    }
-
-    getSelectedItem() {
-        return this._selectedIndex;
-    }
-
-    setSelectedItem(itemIndex) {
-        this._selectedIndex = itemIndex;
-        this.requestSync();
     }
 
     /**
@@ -1838,7 +1824,7 @@ class ListView extends Widget {
     }
 
     /**
-     * @param {ListViewColumn|string} columns 
+     * @param {ListViewColumn[]|string[]} columns 
      */
     setColumns(columns) {
         let originalColumnsSize = this._columns.length;
@@ -1894,7 +1880,7 @@ class ListView extends Widget {
 
     /**
      * Get all the items in this list view.
-     * @returns {string[]}
+     * @returns {string[][]}
      */
     getItems() {
         return this._items;
@@ -1906,6 +1892,10 @@ class ListView extends Widget {
      */
     removeItem(index) {
         this._items.splice(index, 1);
+        if (this._selectedRow == index)
+            this._selectedRow = this._selectedColumn = -1;
+        else if (this._selectedRow > index)
+            this._selectedRow--;
         this.requestRefresh();
     }
 
@@ -1947,7 +1937,7 @@ class ListView extends Widget {
             desc.showColumnHeaders = false; // Showing column headers when there are no columns causes a crash.
 
         desc.canSelect = this._canSelect;
-        if (this._canSelect && this._selectedRow > 0 && this._selectedColumn > 0) {
+        if (this._canSelect && this._selectedRow >= 0 && this._selectedColumn >= 0) {
             desc.selectedCell = {
                 row: this._selectedRow,
                 column: this._selectedColumn
@@ -2066,15 +2056,15 @@ class ViewportWidget extends Widget {
     _getDescription() {
         let desc = super._getDescription();
         this._initMove = true;
-        this.requestSync();
+        this.requestRefresh();
         return desc;
     }
 
     _applyDescription(handle, desc) {
         super._applyDescription(handle, desc);
-        //handle.viewport.rotation = this._rotation;
-        //handle.viewport.zoom = this._zoom;
-        //handle.viewport.visibilityFlags = this._visibilityFlags;
+        handle.viewport.rotation = this._rotation;
+        handle.viewport.zoom = this._zoom;
+        handle.viewport.visibilityFlags = this._visibilityFlags;
 
         if (this._initMove) {
             handle.viewport.moveTo({ x: this._viewX, y: this._viewY });
