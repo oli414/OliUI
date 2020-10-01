@@ -12,7 +12,7 @@ class Button extends Widget {
 
         this._type = "button";
         this._name = this._type + "-" + this._name;
-        this._height = 13;
+        this._height = 15;
         this._onClick = onClick;
         this._hasBorder = true;
         this._isPressed = false;
