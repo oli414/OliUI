@@ -19,16 +19,6 @@ function main() {
         }
 
         {
-            let label = new Oui.Widgets.Label("Label 2");
-            groupBox.addChild(label);
-        }
-
-        {
-            let label = new Oui.Widgets.Label("Label 3");
-            groupBox.addChild(label);
-        }
-
-        {
             let button = new Oui.Widgets.Button("Click Me", () => {
                 myWindow._title = myWindow._title + "+";
                 myWindow.setColors(Math.floor(Math.random() * 31));

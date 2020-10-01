@@ -18,7 +18,7 @@ class Spinner extends Widget {
         this._step = Number(step);
         this._decimals = Math.max(this.countDecimals(this._step), this.countDecimals(this._value));
         this._name = this._type + "-" + this._name;
-        this._height = 15;
+        this._height = 13;
         this._onChange = onChange;
     }
 

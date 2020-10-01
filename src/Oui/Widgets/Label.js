@@ -13,7 +13,7 @@ class Label extends Widget {
         this._type = "label";
         this._text = text;
         this._name = this._type + "-" + this._name;
-        this._height = 12;
+        this._height = 10;
     }
 
     /**

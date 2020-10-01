@@ -14,7 +14,7 @@ class Checkbox extends Widget {
         this._type = "checkbox";
         this._text = text;
         this._name = this._type + "-" + this._name;
-        this._height = 12;
+        this._height = 10;
         this._onChange = onChange;
         this._isChecked = false;
     }

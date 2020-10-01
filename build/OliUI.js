@@ -1077,7 +1077,7 @@ class Button extends Widget {
 
         this._type = "button";
         this._name = this._type + "-" + this._name;
-        this._height = 15;
+        this._height = 13;
         this._onClick = onClick;
         this._hasBorder = true;
         this._isPressed = false;
@@ -1164,7 +1164,7 @@ class Label extends Widget {
         this._type = "label";
         this._text = text;
         this._name = this._type + "-" + this._name;
-        this._height = 12;
+        this._height = 10;
     }
 
     /**
@@ -1292,7 +1292,7 @@ class Checkbox extends Widget {
         this._type = "checkbox";
         this._text = text;
         this._name = this._type + "-" + this._name;
-        this._height = 12;
+        this._height = 10;
         this._onChange = onChange;
         this._isChecked = false;
     }
@@ -1354,7 +1354,7 @@ class Dropdown extends Widget {
 
         this._type = "dropdown";
         this._name = this._type + "-" + this._name;
-        this._height = 15;
+        this._height = 13;
         this._onChange = onChange;
         this._items = items.slice(0);
         this._selectedIndex = 0;
@@ -1421,7 +1421,7 @@ class Spinner extends Widget {
         this._step = Number(step);
         this._decimals = Math.max(this.countDecimals(this._step), this.countDecimals(this._value));
         this._name = this._type + "-" + this._name;
-        this._height = 15;
+        this._height = 13;
         this._onChange = onChange;
     }
 
@@ -2121,7 +2121,7 @@ class ColorPicker extends Dropdown {
             "Light Pink",
         ], onChange);
 
-        this._height = 14;
+        this._height = 12;
     }
 }
 

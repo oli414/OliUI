@@ -1319,7 +1319,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _this8._type = "button";
             _this8._name = _this8._type + "-" + _this8._name;
-            _this8._height = 15;
+            _this8._height = 13;
             _this8._onClick = onClick;
             _this8._hasBorder = true;
             _this8._isPressed = false;
@@ -1436,7 +1436,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this10._type = "label";
             _this10._text = text;
             _this10._name = _this10._type + "-" + _this10._name;
-            _this10._height = 12;
+            _this10._height = 10;
             return _this10;
         }
 
@@ -1632,7 +1632,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this13._type = "checkbox";
             _this13._text = text;
             _this13._name = _this13._type + "-" + _this13._name;
-            _this13._height = 12;
+            _this13._height = 10;
             _this13._onChange = onChange;
             _this13._isChecked = false;
             return _this13;
@@ -1720,7 +1720,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _this15._type = "dropdown";
             _this15._name = _this15._type + "-" + _this15._name;
-            _this15._height = 15;
+            _this15._height = 13;
             _this15._onChange = onChange;
             _this15._items = items.slice(0);
             _this15._selectedIndex = 0;
@@ -1814,7 +1814,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this17._step = Number(step);
             _this17._decimals = Math.max(_this17.countDecimals(_this17._step), _this17.countDecimals(_this17._value));
             _this17._name = _this17._type + "-" + _this17._name;
-            _this17._height = 15;
+            _this17._height = 13;
             _this17._onChange = onChange;
             return _this17;
         }
@@ -2656,7 +2656,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             var _this22 = _possibleConstructorReturn(this, (ColorPicker.__proto__ || Object.getPrototypeOf(ColorPicker)).call(this, ["Black", "Grey", "White", "Dark Purple", "Light Purple", "Bright Purple", "Dark Blue", "Light Blue", "Icy Blue", "Teal", "Aquamarine", "Saturated Green", "Dark Green", "Moss Green", "Bright Green", "Olive Green", "Dark Olive Green", "Bright Yellow", "Yellow", "Dark Yellow", "Light Orange", "Dark Orange", "Light Brown", "Saturated Brown", "Dark Brown", "Salmon Pink", "Bordeaux Red", "Saturated Red", "Bright Red", "Dark Pink", "Bright Pink", "Light Pink"], onChange));
 
-            _this22._height = 15;
+            _this22._height = 12;
             return _this22;
         }
 
@@ -2702,16 +2702,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             {
                 var label = new Oui.Widgets.Label("Label");
                 groupBox.addChild(label);
-            }
-
-            {
-                var _label = new Oui.Widgets.Label("Label 2");
-                groupBox.addChild(_label);
-            }
-
-            {
-                var _label2 = new Oui.Widgets.Label("Label 3");
-                groupBox.addChild(_label2);
             }
 
             {

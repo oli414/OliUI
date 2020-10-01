@@ -13,7 +13,7 @@ class Dropdown extends Widget {
 
         this._type = "dropdown";
         this._name = this._type + "-" + this._name;
-        this._height = 15;
+        this._height = 13;
         this._onChange = onChange;
         this._items = items.slice(0);
         this._selectedIndex = 0;
