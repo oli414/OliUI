@@ -616,7 +616,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var yPos = this._paddingTop;
                 for (var i = 0; i < this._children.length; i++) {
                     var child = this._children[i];
-                    child._x = this._paddingLeft;
+                    if (child._updateChildDimensions) {
+                        child._updateChildDimensions();
+                    }
+
+                    child._x = this._paddingLeft + child._marginLeft;
                     child._y = yPos;
                     yPos += child.getPixelHeight();
 
@@ -1072,8 +1076,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var highestChild = 0;
                 for (var i = 0; i < this._children.length; i++) {
                     var child = this._children[i];
+                    if (child._updateChildDimensions) {
+                        child._updateChildDimensions();
+                    }
+
                     child._x = xPos;
-                    child._y = this._paddingTop;
+                    child._y = this._paddingTop + child._marginTop;
                     xPos += child.getPixelWidth();
 
                     if (i < this._children.length - 1) {

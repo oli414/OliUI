@@ -56,7 +56,11 @@ class VerticalBox extends Box {
         let yPos = this._paddingTop;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
-            child._x = this._paddingLeft;
+            if (child._updateChildDimensions) {
+                child._updateChildDimensions();
+            }
+
+            child._x = this._paddingLeft + child._marginLeft;
             child._y = yPos;
             yPos += child.getPixelHeight();
 

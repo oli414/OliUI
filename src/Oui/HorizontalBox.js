@@ -58,8 +58,12 @@ class HorizontalBox extends Box {
         let highestChild = 0;
         for (let i = 0; i < this._children.length; i++) {
             let child = this._children[i];
+            if (child._updateChildDimensions) {
+                child._updateChildDimensions();
+            }
+
             child._x = xPos;
-            child._y = this._paddingTop;
+            child._y = this._paddingTop + child._marginTop;
             xPos += child.getPixelWidth();
 
             if (i < this._children.length - 1) {
